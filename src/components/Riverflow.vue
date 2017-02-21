@@ -70,7 +70,7 @@ export default {
       if (riverLocation === 'selectRiver' || !riverLocation) {
         return;
       }
-
+      // set the selected location
       this.riverId = riverLocation;
       this.loading = true;
       // load graph
@@ -136,7 +136,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
 .header {
   display: flex;
   justify-content: space-between;
