@@ -54,7 +54,7 @@ export default {
       riverId: null,
       siteName: null,
       selected: 'selectRiver',
-      baseMapUrl: "http://maps.google.com/?q=",
+      baseMapUrl: "//maps.google.com/?q=",
       flickrApiKey: "6c6069e831fb567b86c7d9b75c82624f",
       options: [
         { text: 'Select a river', value: 'selectRiver' },
@@ -115,7 +115,7 @@ export default {
     },
     displayGraph: function() {
       // display a graph of the flow
-      var graphUrl = 'http://waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS&parm_cd=00060&site_no=' + this.riverId + '&period=7';
+      var graphUrl = '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS&parm_cd=00060&site_no=' + this.riverId + '&period=7';
       var image = '<img src="' + graphUrl + '"id="graph" alt="USGS Water-data graph">';
 
       this.graphImage = image;
