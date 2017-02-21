@@ -19,9 +19,7 @@
         <abbr class="rateCfs" title="cubic feet per second">CFS</abbr>
       </h2>
 
-      <div class="mapLinkLatLong" v-if="latitude">
-        <a v-bind:href="mapUrl">View a Map</a> ({{ latitude }},&nbsp; {{ longitude }})
-      </div>
+      <a v-bind:href="mapUrl" v-if="mapUrl">View a Map</a>
 
       <div v-if="latestTime">{{ latestTime }}</div>
     </div>
@@ -35,6 +33,7 @@
 
 <script>
 import axios from 'axios'
+import rivers from 'rivers.json'
 import conditions from 'conditions.json'
 
 export default {
@@ -56,14 +55,7 @@ export default {
       selected: 'selectRiver',
       baseMapUrl: "//maps.google.com/?q=",
       flickrApiKey: "6c6069e831fb567b86c7d9b75c82624f",
-      options: [
-        { text: 'Select a river', value: 'selectRiver' },
-        { text: 'Barton Springs', value: '08155500' },
-        { text: 'Barton Creek : Above Barton Springs', value: '08155400' },
-        { text: 'Barton Creek : Loop 360', value: '08155300' },
-        { text: 'Barton Creek : Lost Ck Blvd', value: '08155240' },
-        { text: 'Barton Creek : SH 71', value: '08155200' }
-      ]
+      options: rivers.data
     }
   },
   methods: {
@@ -76,7 +68,7 @@ export default {
       var that = this;
 
       // do not submit if it's the select message
-      if (riverLocation === 'selectRiver') {
+      if (riverLocation === 'selectRiver' || !riverLocation) {
         return;
       }
 
