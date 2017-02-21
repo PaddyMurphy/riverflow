@@ -44,7 +44,6 @@ export default {
       error: null,
       graphImage: null,
       latestCfs: null,
-      latestCfs: null,
       latestTime: null,
       latitude: null,
       loading: false,
@@ -53,16 +52,16 @@ export default {
       riverId: null,
       siteName: null,
       selected: 'selectRiver',
-      baseMapUrl: "//maps.google.com/?q=",
-      flickrApiKey: "6c6069e831fb567b86c7d9b75c82624f",
+      baseMapUrl: '//maps.google.com/?q=',
+      flickrApiKey: '6c6069e831fb567b86c7d9b75c82624f',
       options: rivers.data
     }
   },
   methods: {
-    getUsgsData: function(e) {
+    getUsgsData: function (e) {
       // fetches usgs instant data, usgs graph service
       var baseUrl = 'https://waterservices.usgs.gov/nwis/iv/?format=json&period=P7D&sites=';
-      var params = "&parameterCd=00060";
+      var params = '&parameterCd=00060';
       var riverLocation = e.target[e.target.selectedIndex].value;
       var fullUrl = baseUrl + riverLocation + params;
       var that = this;
@@ -89,7 +88,7 @@ export default {
           that.error = error.message;
         });
     },
-    displayUsgsData: function(response) {
+    displayUsgsData: function (response) {
       var orderedValues = response.values[0].value.reverse()[0];
       var date = new Date(orderedValues.dateTime);
 
@@ -105,14 +104,14 @@ export default {
       // create map link
       this.mapUrl = this.baseMapUrl + this.latitude + ',+' + this.longitude;
     },
-    displayGraph: function() {
+    displayGraph: function () {
       // display a graph of the flow
       var graphUrl = '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS&parm_cd=00060&site_no=' + this.riverId + '&period=7';
       var image = '<img src="' + graphUrl + '"id="graph" alt="USGS Water-data graph">';
 
       this.graphImage = image;
     },
-    displayConditions: function(flowRate) {
+    displayConditions: function (flowRate) {
       // check the range of the cfs and display the appropriate message
       if (flowRate === 0) {
         this.condition = conditions.flow0;
