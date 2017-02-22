@@ -2,31 +2,36 @@
   <div class="riverflow">
     <div class="loading" v-if="loading">Loading...</div>
     <div class="error" v-if="error">Error loading river information</div>
+
     <div class="header">
-      <h1>Riverflow</h1>
-      <p>Texas Edition</p>
+      <h1 class="title">Riverflow</h1>
+      <p class="tagline">Texas Edition</p>
     </div>
 
-    <select v-model="selected" @change="getUsgsData">
-      <option v-for="option in options" v-bind:value="option.value">
-          {{ option.text }}
-        </option>
-    </select>
-
-    <div class="latestCfs" v-if="latestCfs">
-      <h2>
-        <span class="rate">{{ latestCfs }}</span>
-        <abbr class="rateCfs" title="cubic feet per second">CFS</abbr>
-      </h2>
-
-      <a v-bind:href="mapUrl" v-if="mapUrl">View a Map</a>
-
-      <div v-if="latestTime">{{ latestTime }}</div>
+    <div class="select-river-wrapper">
+      <select v-model="selected" @change="getUsgsData">
+        <option v-for="option in options" v-bind:value="option.value">
+            {{ option.text }}
+          </option>
+      </select>
     </div>
 
-    <div class="conditions" v-if="condition">{{ condition }}</div>
+    <div class="condition-wrapper">
+      <div class="latest-cfs" v-if="latestCfs">
+        <h2>
+          <span class="rate">{{ latestCfs }}</span>
+          <abbr class="rateCfs" title="cubic feet per second">CFS</abbr>
+        </h2>
 
-    <div class="graph" v-if="graphImage" v-html="graphImage"></div>
+        <a v-bind:href="mapUrl" v-if="mapUrl">View a Map</a>
+
+        <div v-if="latestTime">{{ latestTime }}</div>
+      </div>
+
+      <div class="conditions" v-if="condition">{{ condition }}</div>
+    </div>
+
+    <div class="graph-wrapper" v-if="graphImage" v-html="graphImage"></div>
 
   </div> <!-- END riverflow -->
 </template>
@@ -137,17 +142,32 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+$orange: #fa6900;
+
 .header {
+  align-items: center;
   display: flex;
   justify-content: space-between;
 }
 
-h1, h2 {
-  font-weight: normal;
+:root .title, .tagline {
+  margin: 1em;
+}
+
+.title {
+  font-size: 120%;
+}
+
+.tagline {
+  font-size: 100%;
 }
 
 a {
   color: #42b983;
+}
+
+.select-river-wrapper {
+  padding: 0 1em;
 }
 
 select {
@@ -156,7 +176,32 @@ select {
   width: 100%;
 }
 
+.condition-wrapper {
+  display: flex;
+  margin: 1em;
+}
+
+.latest-cfs {
+  width: 50%;
+}
+
 .conditions {
-  margin: 1em 0;
+  width: 50%;
+}
+
+.graph-wrapper {
+  text-align: center;
+}
+
+// this is scoped so #graph is defined in App.vue
+// #graph {}
+
+.error, .loading {
+  background: rgba(255,255,255,0.9);
+  font-size: 120%;
+  padding: 1em;
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
 </style>
