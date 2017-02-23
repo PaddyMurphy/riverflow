@@ -5,7 +5,6 @@
 </template>
 
 <script>
-// TODO: does this get compiled in build?
 import './assets/css/reset.css'
 export default {
   name: 'app'
@@ -13,7 +12,6 @@ export default {
 </script>
 
 <style>
-
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -21,7 +19,7 @@ export default {
   color: #2c3e50;
 }
 
-#graph {
+.graph {
   image-rendering: pixelated;
   height: auto;
   width: 100%;

@@ -18,12 +18,13 @@
 
     <div class="condition-wrapper">
       <div class="latest-cfs" v-if="latestCfs">
-        <h2>
-          <span class="rate">{{ latestCfs }}</span>
-          <abbr class="rateCfs" title="cubic feet per second">CFS</abbr>
-        </h2>
 
-        <a v-bind:href="mapUrl" v-if="mapUrl">View a Map</a>
+        <div class="rate-group">
+          <span class="rate">{{ latestCfs }}</span>
+          <abbr class="rate-abbr" title="cubic feet per second">CFS</abbr>
+        </div>
+
+        <a v-bind:href="mapUrl" v-if="mapUrl">Location of guage</a>
 
         <div v-if="latestTime">{{ latestTime }}</div>
       </div>
@@ -112,9 +113,11 @@ export default {
     displayGraph: function () {
       // display a graph of the flow
       var graphUrl = '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS&parm_cd=00060&site_no=' + this.riverId + '&period=7';
-      var image = '<img src="' + graphUrl + '"id="graph" alt="USGS Water-data graph">';
+      var image = '<img src="' + graphUrl + '"class="graph" alt="USGS Water-data graph">';
 
       this.graphImage = image;
+
+      return image;
     },
     displayConditions: function (flowRate) {
       // check the range of the cfs and display the appropriate message
@@ -132,9 +135,9 @@ export default {
         this.condition = conditions.flow5;
       } else if (flowRate >= 2000) {
         this.condition = conditions.flow6;
-      } else {
-        console.error('no flow rate conditions met. flowRate = ' + flowRate);
       }
+
+      return this.condition;
     }
   }
 }
@@ -143,6 +146,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 $orange: #fa6900;
+$orange-light: lighten(#fa6900, 15%);
 
 .header {
   align-items: center;
@@ -155,15 +159,11 @@ $orange: #fa6900;
 }
 
 .title {
-  font-size: 120%;
+  font-size: 1.2em;
 }
 
 .tagline {
-  font-size: 100%;
-}
-
-a {
-  color: #42b983;
+  font-size: 1em;
 }
 
 .select-river-wrapper {
@@ -172,7 +172,7 @@ a {
 
 select {
   background: #fff;
-  font-size: 150%;
+  font-size: 1.5em;
   width: 100%;
 }
 
@@ -182,7 +182,30 @@ select {
 }
 
 .latest-cfs {
+  text-align: center;
   width: 50%;
+}
+
+.rate-group {
+  align-items: baseline;
+  display: flex;
+  justify-content: center;
+}
+
+.rate {
+  color: $orange;
+  font-weight: bold;
+  font-size: 4em;
+}
+
+.rate-abbr {
+  color: $orange-light;
+  font-size: 2em;
+  font-weight: bold;
+
+  &[title] {
+    border-bottom: 1px dotted;
+  }
 }
 
 .conditions {
@@ -193,12 +216,9 @@ select {
   text-align: center;
 }
 
-// this is scoped so #graph is defined in App.vue
-// #graph {}
-
 .error, .loading {
   background: rgba(255,255,255,0.9);
-  font-size: 120%;
+  font-size: 1.2em;
   padding: 1em;
   position: fixed;
   width: 100%;
