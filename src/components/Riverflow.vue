@@ -9,7 +9,7 @@
     </div>
 
     <div class="select-river-wrapper">
-      <select v-model="selected" @change="getUsgsData">
+      <select class="select-river" v-model="selected" @change="changeRiver">
         <option v-for="option in options" v-bind:value="option.value">
             {{ option.text }}
           </option>
@@ -25,8 +25,12 @@
         </div>
 
         <a v-bind:href="mapUrl" v-if="mapUrl">Location of guage</a>
-
-        <div v-if="latestTime">{{ latestTime }}</div>
+        <div class="time-group">
+          <span v-if="latestTime">{{ latestTime }}</span>
+          <ul class="time-history" v-if="timeHistory.length">
+            <li v-for="time in timeHistory">{{ time }}</li>
+          </ul>
+        </div>
       </div>
 
       <div class="conditions" v-if="condition">{{ condition }}</div>
@@ -55,29 +59,48 @@ export default {
       loading: false,
       longitude: null,
       mapUrl: null,
-      riverId: null,
       siteName: null,
       selected: 'selectRiver',
       baseMapUrl: '//maps.google.com/?q=',
-      flickrApiKey: '6c6069e831fb567b86c7d9b75c82624f',
-      options: rivers.data
+      options: rivers.data,
+      timeHistory: []
     }
   },
+  mounted: function () {
+    // set selected river and fetch if routed from url
+    if (this.$route.name === 'RiverflowUrl') {
+      this.setSelectedRiver(this.$route.params.river);
+    }
+  },
+  watch: {
+    selected: 'getUsgsData'
+  },
   methods: {
-    getUsgsData: function (e) {
-      // fetches usgs instant data, usgs graph service
+    setSelectedRiver: function (river) {
+      var that = this;
+      console.log('setSelectedRiver: ' + river);
+      // set the selected option
+      this.options.forEach(function (option, i) {
+        if (that.formatRiverName(option.text) === river) {
+          that.selected = option.value;
+        }
+      });
+    },
+    changeRiver: function (e) {
+      this.selected = e.target[e.target.selectedIndex].value;
+    },
+    getUsgsData: function () {
+      // // fetches usgs instant data, usgs graph service
       var baseUrl = 'https://waterservices.usgs.gov/nwis/iv/?format=json&period=P7D&sites=';
       var params = '&parameterCd=00060';
-      var riverLocation = e.target[e.target.selectedIndex].value;
-      var fullUrl = baseUrl + riverLocation + params;
+      var fullUrl = baseUrl + this.selected + params;
       var that = this;
 
       // do not submit if it's the select message
-      if (riverLocation === 'selectRiver' || !riverLocation) {
+      if (this.selected === 'selectRiver' || !this.selected) {
         return;
       }
-      // set the selected location
-      this.riverId = riverLocation;
+
       this.loading = true;
       // load graph
       this.displayGraph();
@@ -87,6 +110,7 @@ export default {
           that.loading = false;
           that.error = null;
           that.displayUsgsData(response.data.value.timeSeries[0]);
+          // TODO: set the url
         })
         .catch(function (error) {
           console.error(error.message);
@@ -112,7 +136,7 @@ export default {
     },
     displayGraph: function () {
       // display a graph of the flow
-      var graphUrl = '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS&parm_cd=00060&site_no=' + this.riverId + '&period=7';
+      var graphUrl = '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS&parm_cd=00060&site_no=' + this.selected + '&period=7';
       var image = '<img src="' + graphUrl + '"class="graph" alt="USGS Water-data graph">';
 
       this.graphImage = image;
@@ -138,6 +162,17 @@ export default {
       }
 
       return this.condition;
+    },
+    formatRiverName: function (name) {
+      // parse the option text (San Marcos River : Luling)
+      // to this (sanmarcos:luling)
+      var formatted = name;
+      formatted = formatted.toLowerCase();
+      formatted = formatted.replace(/ /g, ''); // replace spaces
+      formatted = formatted.replace(/(\r\n|\n|\r)/gm, '');// remove line breaks
+      formatted = formatted.replace(/-(\S*)-/g, ''); // exclude titles (i.e. --brazosriverbasin--)
+
+      return formatted;
     }
   }
 }
@@ -209,6 +244,7 @@ select {
 }
 
 .conditions {
+  padding-left: 1em;
   width: 50%;
 }
 

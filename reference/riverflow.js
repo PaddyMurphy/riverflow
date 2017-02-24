@@ -3,6 +3,7 @@
  *  @author Patrick Lewis
  *  @requires jQuery 1.4+
  */
+ /* eslint-disable */
 (function($) {
 	"use strict";
 	var flowApp = {
