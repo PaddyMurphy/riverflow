@@ -33,7 +33,7 @@
 
       <div class="conditions" v-if="condition">{{ condition }}</div>
 
-      <div class="history" v-if="history.length">
+      <div class="history" v-if="history.length > 1">
         <h4 class="history-title">History</h4>
         <ul class="time-history">
           <li v-for="item in history">
