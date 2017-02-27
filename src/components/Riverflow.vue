@@ -45,6 +45,8 @@
 
     <div class="graph-wrapper" v-if="graphImage" v-html="graphImage"></div>
 
+    <footer>created by <a href="//mountaindrawn.com">mountaindrawn.com</a></footer>
+
   </div> <!-- END riverflow -->
 </template>
 
@@ -326,6 +328,12 @@ select {
 }
 
 .graph-wrapper {
+  text-align: center;
+}
+
+footer {
+  font-size: 0.8em;
+  padding: 1em 0;
   text-align: center;
 }
 
