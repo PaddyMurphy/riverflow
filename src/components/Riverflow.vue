@@ -1,7 +1,6 @@
 <template>
   <div class="riverflow">
     <div class="loading" v-if="loading">Loading...</div>
-    <div class="error" v-if="error">Error loading river information</div>
 
     <div class="header">
       <h1 class="title">Riverflow</h1>
@@ -16,6 +15,8 @@
       </select>
     </div>
 
+    <div class="error" v-if="error">{{ error }}</div>
+
     <div class="condition-wrapper">
       <div class="latest-cfs" v-if="latestCfs">
 
@@ -26,14 +27,20 @@
 
         <a v-bind:href="mapUrl" v-if="mapUrl">Location of guage</a>
         <div class="time-group">
-          <span v-if="latestTime">{{ latestTime }}</span>
-          <ul class="time-history" v-if="timeHistory.length">
-            <li v-for="time in timeHistory">{{ time }}</li>
-          </ul>
+          <span v-if="latestDate">{{ latestDate }} at {{ latestTime }}</span>
         </div>
       </div>
 
       <div class="conditions" v-if="condition">{{ condition }}</div>
+
+      <div class="history" v-if="history.length">
+        <h4 class="history-title">History</h4>
+        <ul class="time-history">
+          <li v-for="item in history">
+            <b>{{ item.cfs }}</b> <abbr class="cfs" title="cubic feet per second">cfs</abbr> <span class="name">{{ item.name }}</span> <small>{{ item.date }} at {{ item.time }}</small>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <div class="graph-wrapper" v-if="graphImage" v-html="graphImage"></div>
@@ -54,16 +61,18 @@ export default {
       error: null,
       graphImage: null,
       latestCfs: null,
+      latestDate: null,
       latestTime: null,
       latitude: null,
       loading: false,
       longitude: null,
       mapUrl: null,
       siteName: null,
+      STORAGE_KEY: 'riverflow-history',
       selected: 'selectRiver',
       baseMapUrl: '//maps.google.com/?q=',
       options: rivers.data,
-      timeHistory: []
+      history: []
     }
   },
   mounted: function () {
@@ -71,6 +80,8 @@ export default {
     if (this.$route.name === 'RiverflowUrl') {
       this.setSelectedRiver(this.$route.params.river);
     }
+    //
+    this.fetchHistory();
   },
   watch: {
     selected: 'getUsgsData'
@@ -78,7 +89,6 @@ export default {
   methods: {
     setSelectedRiver: function (river) {
       var that = this;
-      console.log('setSelectedRiver: ' + river);
       // set the selected option
       this.options.forEach(function (option, i) {
         if (that.formatRiverName(option.text) === river) {
@@ -102,14 +112,19 @@ export default {
       }
 
       this.loading = true;
-      // load graph
-      this.displayGraph();
+
       // fetch data
       axios.get(fullUrl)
         .then(function (response) {
           that.loading = false;
-          that.error = null;
-          that.displayUsgsData(response.data.value.timeSeries[0]);
+
+          if (response.data.value.timeSeries[0]) {
+            that.displayUsgsData(response.data.value.timeSeries[0]);
+            that.displayGraph();
+            that.error = null;
+          } else {
+            that.error = 'no river data available';
+          }
           // TODO: set the url
         })
         .catch(function (error) {
@@ -127,8 +142,11 @@ export default {
       this.siteName = response.sourceInfo.siteName;
       this.latitude = response.sourceInfo.geoLocation.geogLocation.latitude;
       this.longitude = response.sourceInfo.geoLocation.geogLocation.longitude;
-      // build date
-      this.latestTime = date.toDateString() + ' at ' + date.toLocaleTimeString();
+      // timestamp of data
+      this.latestDate = date.toDateString();
+      this.latestTime = date.toLocaleTimeString();
+      // save data for history
+      this.addHistory();
       // display conditions
       this.displayConditions(parseInt(this.latestCfs, 10));
       // create map link
@@ -136,6 +154,8 @@ export default {
     },
     displayGraph: function () {
       // display a graph of the flow
+      // TODO: catch error for undefined params
+      //       effects: Pecas at Pecos river 08419000
       var graphUrl = '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS&parm_cd=00060&site_no=' + this.selected + '&period=7';
       var image = '<img src="' + graphUrl + '"class="graph" alt="USGS Water-data graph">';
 
@@ -173,6 +193,37 @@ export default {
       formatted = formatted.replace(/-(\S*)-/g, ''); // exclude titles (i.e. --brazosriverbasin--)
 
       return formatted;
+    },
+    fetchHistory: function () {
+      var historyItems = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
+      var that = this;
+
+      historyItems.forEach(function (item, index) {
+        that.history.push(item);
+      })
+
+      return this.history
+    },
+    saveHistory: function (history) {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(history))
+    },
+    addHistory: function () {
+      // limit to 7, remove oldest
+      if (this.history.length >= 7) {
+        this.history.pop();
+      }
+      // create history object
+      this.history.unshift({
+        cfs: this.latestCfs,
+        name: this.siteName,
+        time: this.latestTime,
+        date: this.latestDate
+      });
+
+      this.saveHistory(this.history);
+    },
+    removeHistory: function (item) {
+      this.history.splice(this.history.indexOf(item), 1)
     }
   }
 }
@@ -213,12 +264,17 @@ select {
 
 .condition-wrapper {
   display: flex;
-  margin: 1em;
+  flex-wrap: wrap;
+  margin: 0.5em;
+
+  > div {
+    flex: 1 1 33.3%;
+    padding: 0.5em
+  }
 }
 
 .latest-cfs {
   text-align: center;
-  width: 50%;
 }
 
 .rate-group {
@@ -243,21 +299,49 @@ select {
   }
 }
 
-.conditions {
-  padding-left: 1em;
-  width: 50%;
+.conditions {}
+
+.time-history {
+  font-size: 0.8em;
+  margin: 0;
+  padding: 0;
+
+  li {
+    list-style: none;
+    padding: 0 0 .25em;
+  }
+  // hide the first once since the data is already displayed
+  li:first-child {
+    display: none !important;
+  }
+
+  .cfs {
+    font-size: 0.8em;
+    margin-left: -0.20em;
+  }
+}
+
+.history-title {
+  margin: 0 0 .25em;
 }
 
 .graph-wrapper {
   text-align: center;
 }
 
-.error, .loading {
+.loading {
   background: rgba(255,255,255,0.9);
   font-size: 1.2em;
   padding: 1em;
   position: fixed;
   width: 100%;
   height: 100%;
+}
+
+.error {
+  font-size: 1.2em;
+  text-align: center;
+  padding: 1em;
+  width: 100%;
 }
 </style>
