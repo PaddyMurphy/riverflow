@@ -4,7 +4,7 @@ Vue.js based riverflow app
 
 Testing out vuejs for the first time by converting on old jquery based app. Select a river to get the latest flow in cubic feet per second along with a 7-day graph, paddling description, and saved history of searches.
 
-This publishes to docs/ for gh-pages. [View the app](https://mountaindrawn.com/vuejs-riverflow/#/).
+This publishes to docs/ for gh-pages. [View the app](https://mountaindrawn.com/riverflow/#/).
 
 ## Build Setup
 
