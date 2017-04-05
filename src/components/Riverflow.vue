@@ -232,9 +232,26 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
+<style lang="scss">
 $orange: #fa6900;
 $orange-light: lighten(#fa6900, 15%);
+$default-padding: 2em;
+
+html, body{
+  height: 100%;
+}
+
+html {
+  background-color: #B4C2BA;
+  background-image: url('/static/img/devils-river.jpg');
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+body {
+  background: rgba(255,255,255,0.7);
+}
 
 .header {
   align-items: center;
@@ -243,7 +260,7 @@ $orange-light: lighten(#fa6900, 15%);
 }
 
 :root .title, .tagline {
-  margin: 1em;
+  margin: 1em $default-padding;
 }
 
 .title {
@@ -255,7 +272,7 @@ $orange-light: lighten(#fa6900, 15%);
 }
 
 .select-river-wrapper {
-  padding: 0 1em;
+  padding: 0 $default-padding;
 }
 
 select {
@@ -267,11 +284,11 @@ select {
 .condition-wrapper {
   display: flex;
   flex-wrap: wrap;
-  margin: 0.5em;
+  margin: 1em;
 
   > div {
     flex: 1 1 33.3%;
-    padding: 0.5em
+    padding: 1em
   }
 }
 
@@ -327,20 +344,29 @@ select {
   margin: 0 0 .25em;
 }
 
+.graph {
+  image-rendering: pixelated;
+  height: auto;
+  width: 100%;
+}
+
 .graph-wrapper {
   text-align: center;
 }
 
 footer {
   font-size: 0.8em;
-  padding: 1em 0;
+  padding: $default-padding 0;
   text-align: center;
 }
 
 .loading {
+  align-items: center;
   background: rgba(255,255,255,0.9);
+  display: flex;
   font-size: 1.2em;
-  padding: 1em;
+  justify-content: center;
+  padding-bottom: $default-padding;
   position: fixed;
   width: 100%;
   height: 100%;
@@ -349,7 +375,7 @@ footer {
 .error {
   font-size: 1.2em;
   text-align: center;
-  padding: 1em;
+  padding: $default-padding;
   width: 100%;
 }
 </style>

@@ -12,19 +12,10 @@ export default {
 </script>
 
 <style>
-body {
-  background: #eaf1f3;
-}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-
-.graph {
-  image-rendering: pixelated;
-  height: auto;
-  width: 100%;
+  color: #000;
 }
 </style>
