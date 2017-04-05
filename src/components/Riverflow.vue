@@ -242,15 +242,15 @@ html, body{
 }
 
 html {
-  background-color: #B4C2BA;
-  background-image: url('/static/img/devils-river.jpg');
-  background-position: top center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  // background-color: #B4C2BA;
+  // background-image: url('static/img/devils-river.jpg');
+  // background-position: top center;
+  // background-repeat: no-repeat;
+  // background-size: cover;
 }
 
 body {
-  background: rgba(255,255,255,0.7);
+  background: #E9EDEA;
 }
 
 .header {
