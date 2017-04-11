@@ -177,7 +177,7 @@ export default {
     displayUsgsData: function (response) {
       var values = response.values;
       // the last item in the last object is the last value
-      var orderedValues = values[values.length - 1].value.reverse()[0];
+      var orderedValues = values[0].value.reverse()[0];
       var date = new Date(orderedValues.dateTime);
 
       // set values
