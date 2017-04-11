@@ -72,7 +72,7 @@
 
     <footer>
       created by <a href="//mountaindrawn.com">mountaindrawn.com</a>
-      <input type="color" class="color-picker" @change="selectBackground">
+      <input type="color" class="color-picker" @change="selectBackground" value="#E0E4CC">
       <small class="color-value">{{backgroundColor}}</small>
     </footer>
 
@@ -291,7 +291,23 @@ export default {
     },
     selectBackground: function (e) {
       this.backgroundColor = e.target.value;
+      // set the backgound color
       document.body.style.backgroundColor = e.target.value;
+
+      // http://stackoverflow.com/questions/12043187/how-to-check-if-hex-color-is-too-black
+      var c = this.backgroundColor.substring(1); // strip #
+      var rgb = parseInt(c, 16); // convert rrggbb to decimal
+      var r = (rgb >> 16) & 0xff; // extract red
+      var g = (rgb >> 8) & 0xff; // extract green
+      var b = (rgb >> 0) & 0xff; // extract blue
+
+      var luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+      // adjust font color to backgound
+      if (luma < 45) {
+        document.body.style.color = '#fff';
+      } else {
+        document.body.style.color = '#000';
+      }
     },
     toggleLoading: function () {
       var style = this.loading === true ? 'flex' : 'none';
