@@ -15,6 +15,31 @@
       </select>
     </div>
 
+    <div class="graph-options">
+      <div class="graph-controls-menu">
+        <label class="graph-radio-label">
+          <input type="radio" id="radio-dates-period" value="period" v-model="radioDateType">
+          <span>Search by number of days &nbsp;</span>
+
+          <input class="graph-period" type="number" min="7" max="90" v-model="period" v-show="radioDateType === 'period'">
+        </label>
+        <label class="graph-radio-label">
+          <input type="radio" id="radio-dates-date" value="date" v-model="radioDateType">
+          <span>Search by a date range</span>
+        </label>
+      </div>
+
+      <label class="graph-control-label" v-show="radioDateType === 'date'">
+        <span class="label-name">start date</span>
+        <input class="graph-start" type="text" v-model="startDate" placeholder="Pick a date before today">
+      </label>
+
+      <label class="graph-control-label" v-show="radioDateType === 'date'">
+        <span class="label-name">end date</span>
+        <input class="graph-end" type="text" v-model="endDate">
+      </label>
+    </div>
+
     <div class="error" v-if="error">{{ error }}</div>
 
     <div class="condition-wrapper">
@@ -43,15 +68,20 @@
       </div>
     </div>
 
-    <div class="graph-wrapper" v-if="graphImage" v-html="graphImage"></div>
+    <div class="graph-wrapper" v-html="graphImage">loading...</div>
 
-    <footer>created by <a href="//mountaindrawn.com">mountaindrawn.com</a></footer>
+    <footer>
+      created by <a href="//mountaindrawn.com">mountaindrawn.com</a>
+      <input type="color" class="color-picker" @change="selectBackground">
+      <small class="color-value">{{backgroundColor}}</small>
+    </footer>
 
   </div> <!-- END riverflow -->
 </template>
 
 <script>
 import axios from 'axios'
+import Flatpickr from 'flatpickr'
 import rivers from 'rivers.json'
 import conditions from 'conditions.json'
 
@@ -59,6 +89,7 @@ export default {
   name: 'riverflow',
   data () {
     return {
+      backgroundColor: null,
       condition: null,
       error: null,
       graphImage: null,
@@ -69,12 +100,19 @@ export default {
       loading: false,
       longitude: null,
       mapUrl: null,
+      period: 7, // days
       siteName: null,
+      startDate: null,
+      endDate: new Date().toISOString().split('T')[0], // todays date YYYY-MM-DD
+      valueBaseUrl: 'https://waterservices.usgs.gov/nwis/iv/?format=json&period=P1D',
+      graphBaseUrl: '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS',
+      graphType: '00060', // defaults to cfs
       STORAGE_KEY: 'riverflow-history',
       selected: 'selectRiver',
       baseMapUrl: '//maps.google.com/?q=',
       options: rivers.data,
-      history: []
+      history: [],
+      radioDateType: 'period'
     }
   },
   mounted: function () {
@@ -82,19 +120,22 @@ export default {
     if (this.$route.name === 'RiverflowUrl') {
       this.setSelectedRiver(this.$route.params.river);
     }
-    //
+
     this.fetchHistory();
+
+    new Flatpickr(this.$el.querySelector('.graph-start')); // eslint-disable-line
+    new Flatpickr(this.$el.querySelector('.graph-end')); // eslint-disable-line
   },
   watch: {
     selected: 'getUsgsData'
   },
   methods: {
     setSelectedRiver: function (river) {
-      var that = this;
+      var vm = this;
       // set the selected option
       this.options.forEach(function (option, i) {
-        if (that.formatRiverName(option.text) === river) {
-          that.selected = option.value;
+        if (vm.formatRiverName(option.text) === river) {
+          vm.selected = option.value;
         }
       });
     },
@@ -103,10 +144,8 @@ export default {
     },
     getUsgsData: function () {
       // // fetches usgs instant data, usgs graph service
-      var baseUrl = 'https://waterservices.usgs.gov/nwis/iv/?format=json&period=P7D&sites=';
-      var params = '&parameterCd=00060';
-      var fullUrl = baseUrl + this.selected + params;
-      var that = this;
+      var vm = this;
+      var fullUrl = this.valueBaseUrl + '&parameterCd=' + this.graphType + '&sites=' + this.selected;
 
       // do not submit if it's the select message
       if (this.selected === 'selectRiver' || !this.selected) {
@@ -118,25 +157,27 @@ export default {
       // fetch data
       axios.get(fullUrl)
         .then(function (response) {
-          that.loading = false;
+          vm.loading = false;
 
           if (response.data.value.timeSeries[0]) {
-            that.displayUsgsData(response.data.value.timeSeries[0]);
-            that.displayGraph();
-            that.error = null;
+            vm.displayUsgsData(response.data.value.timeSeries[0]);
+            vm.displayGraph();
+            vm.error = null;
           } else {
-            that.error = 'no river data available';
+            vm.error = 'no river data available';
           }
           // TODO: set the url
         })
         .catch(function (error) {
           console.error(error.message);
-          that.loading = false;
-          that.error = error.message;
+          vm.loading = false;
+          vm.error = error.message;
         });
     },
     displayUsgsData: function (response) {
-      var orderedValues = response.values[0].value.reverse()[0];
+      var values = response.values;
+      // the last item in the last object is the last value
+      var orderedValues = values[values.length - 1].value.reverse()[0];
       var date = new Date(orderedValues.dateTime);
 
       // set values
@@ -158,8 +199,22 @@ export default {
       // display a graph of the flow
       // TODO: catch error for undefined params
       //       effects: Pecas at Pecos river 08419000
-      var graphUrl = '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS&parm_cd=00060&site_no=' + this.selected + '&period=7';
-      var image = '<img src="' + graphUrl + '"class="graph" alt="USGS Water-data graph">';
+      //       parm_cd=00060 (cfs) or 00065 (guage height ft)
+      var image;
+      // NOTE: usgs documentation is incorrect 'startDt' is 'begin_date'
+      var graphUrl = this.graphBaseUrl + '&parm_cd=' + this.graphType + '&site_no=' + this.selected;
+
+      // period of days
+      if (this.radioDateType === 'period') {
+        graphUrl = graphUrl + '&period=' + this.period;
+      }
+
+      // add start and end
+      if (this.radioDateType === 'date' && this.startDate) {
+        graphUrl = graphUrl + '&begin_date=' + this.startDate + '&end_date=' + this.endDate;
+      }
+
+      image = '<img src="' + graphUrl + '"class="graph" alt="USGS Water-data graph">';
 
       this.graphImage = image;
 
@@ -198,16 +253,16 @@ export default {
     },
     fetchHistory: function () {
       var historyItems = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
-      var that = this;
+      var vm = this;
 
       historyItems.forEach(function (item, index) {
-        that.history.push(item);
+        vm.history.push(item);
       })
 
       return this.history
     },
     saveHistory: function (history) {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(history))
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(history));
     },
     addHistory: function () {
       // limit to 7, remove oldest
@@ -225,7 +280,11 @@ export default {
       this.saveHistory(this.history);
     },
     removeHistory: function (item) {
-      this.history.splice(this.history.indexOf(item), 1)
+      this.history.splice(this.history.indexOf(item), 1);
+    },
+    selectBackground: function (e) {
+      this.backgroundColor = e.target.value;
+      document.body.style.backgroundColor = e.target.value;
     }
   }
 }
@@ -233,149 +292,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-$orange: #fa6900;
-$orange-light: lighten(#fa6900, 15%);
-$default-padding: 2em;
-
-html, body{
-  height: 100%;
-}
-
-html {
-  // background-color: #B4C2BA;
-  // background-image: url('static/img/devils-river.jpg');
-  // background-position: top center;
-  // background-repeat: no-repeat;
-  // background-size: cover;
-}
-
-body {
-  background: #E9EDEA;
-}
-
-.header {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-}
-
-:root .title, .tagline {
-  margin: 1em $default-padding;
-}
-
-.title {
-  font-size: 1.2em;
-}
-
-.tagline {
-  font-size: 1em;
-}
-
-.select-river-wrapper {
-  padding: 0 $default-padding;
-}
-
-select {
-  background: #fff;
-  font-size: 1.5em;
-  width: 100%;
-}
-
-.condition-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 1em;
-
-  > div {
-    flex: 1 1 33.3%;
-    padding: 1em
-  }
-}
-
-.latest-cfs {
-  text-align: center;
-}
-
-.rate-group {
-  align-items: baseline;
-  display: flex;
-  justify-content: center;
-}
-
-.rate {
-  color: $orange;
-  font-weight: bold;
-  font-size: 4em;
-}
-
-.rate-abbr {
-  color: $orange-light;
-  font-size: 2em;
-  font-weight: bold;
-
-  &[title] {
-    border-bottom: 1px dotted;
-  }
-}
-
-.conditions {}
-
-.time-history {
-  font-size: 0.8em;
-  margin: 0;
-  padding: 0;
-
-  li {
-    list-style: none;
-    padding: 0 0 .25em;
-  }
-  // hide the first once since the data is already displayed
-  li:first-child {
-    display: none !important;
-  }
-
-  .cfs {
-    font-size: 0.8em;
-    margin-left: -0.20em;
-  }
-}
-
-.history-title {
-  margin: 0 0 .25em;
-}
-
-.graph {
-  image-rendering: pixelated;
-  height: auto;
-  width: 100%;
-}
-
-.graph-wrapper {
-  text-align: center;
-}
-
-footer {
-  font-size: 0.8em;
-  padding: $default-padding 0;
-  text-align: center;
-}
-
-.loading {
-  align-items: center;
-  background: rgba(255,255,255,0.9);
-  display: flex;
-  font-size: 1.2em;
-  justify-content: center;
-  padding-bottom: $default-padding;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-}
-
-.error {
-  font-size: 1.2em;
-  text-align: center;
-  padding: $default-padding;
-  width: 100%;
-}
+  @import '../assets/scss/riverflow.scss';
 </style>

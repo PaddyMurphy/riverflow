@@ -1,0 +1,205 @@
+@import '../assets/scss/reset.scss';
+@import '../../node_modules/flatpickr/dist/themes/dark.css';
+
+$orange: #fa6900;
+$orange-light: #F38630;
+$grey: #A6A6A6;
+$background-color: #E0E4CC;
+$conditions-color: rgba(255,255,255,0.2);
+$default-padding: 2em;
+
+html, body{
+  height: 100%;
+}
+
+body {
+  background: $background-color;
+}
+
+h1, h2, h3, h4 {
+  margin-top: 0;
+}
+
+.header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+:root .title, .tagline {
+  margin: 1em $default-padding;
+}
+
+.title {
+  font-size: 1.2em;
+}
+
+.tagline {
+  font-size: 1em;
+}
+
+.select-river-wrapper {
+  padding: 0 $default-padding $default-padding;
+}
+
+select {
+  background: #fff;
+  font-size: 1.5em;
+  width: 100%;
+}
+
+.graph-options-control {
+  padding: 0 $default-padding;
+}
+
+.graph-options {
+  margin-top: 0;
+  padding: 1em $default-padding;
+}
+
+.graph-control-label {
+  display: block;
+  margin: 0 0 1em;
+}
+
+.graph-controls-menu {
+  display: flex;
+  margin: 0 0 $default-padding;
+}
+
+.graph-radio-label {
+  cursor: pointer;
+  display: flex; // keeps aligned to radio
+  flex: 1 1 50%;
+}
+
+.graph-period {
+  transform: translateY(-0.3em);
+}
+
+#radio-dates-period,
+#radio-dates-date {
+  flex: 0 0 auto; // keeps aligned to radio
+}
+
+.label-name {
+  display: inline-block;
+  width: 8em;
+}
+
+input {
+  border: 1px solid $grey;
+  padding: 0.1em;
+  font-size: 1.5em;
+}
+
+.condition-wrapper {
+  background: $conditions-color;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1em;
+
+  > div {
+    flex: 1 1 33.3%;
+    padding: 1em
+  }
+}
+
+.latest-cfs {
+  text-align: center;
+}
+
+.rate-group {
+  align-items: baseline;
+  display: flex;
+  justify-content: center;
+}
+
+.rate {
+  color: $orange;
+  font-weight: bold;
+  font-size: 4em;
+}
+
+.rate-abbr {
+  color: $orange-light;
+  font-size: 2em;
+  font-weight: bold;
+
+  &[title] {
+    border-bottom: 1px dotted;
+  }
+}
+
+.time-history {
+  font-size: 0.8em;
+  margin: 0;
+  padding: 0;
+
+  li {
+    list-style: none;
+    padding: 0 0 .25em;
+  }
+  // hide the first once since the data is already displayed
+  li:first-child {
+    display: none !important;
+  }
+
+  .cfs {
+    font-size: 0.8em;
+    margin-left: -0.20em;
+  }
+}
+
+.history-title {
+  margin: 0 0 .25em;
+}
+
+.graph {
+  image-rendering: pixelated;
+  height: auto;
+  width: 100%;
+}
+
+.graph-wrapper {
+  text-align: center;
+}
+
+footer {
+  font-size: 0.8em;
+  padding: $default-padding 0;
+  text-align: center;
+}
+
+.color-picker {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  opacity: 0.3;
+  transition: opacity 0.25s;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.loading {
+  align-items: center;
+  background: rgba(255,255,255,0.9);
+  display: flex;
+  font-size: 1.2em;
+  justify-content: center;
+  padding-bottom: $default-padding;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+.error {
+  font-size: 1.2em;
+  text-align: center;
+  padding: $default-padding;
+  width: 100%;
+}
