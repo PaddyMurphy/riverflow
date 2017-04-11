@@ -64,17 +64,24 @@ select {
 
 .graph-controls-menu {
   display: flex;
-  margin: 0 0 $default-padding;
+  flex-wrap: wrap;
+  margin: 0 0 1em;
 }
 
 .graph-radio-label {
   cursor: pointer;
   display: flex; // keeps aligned to radio
   flex: 1 1 50%;
+  margin: 0 auto 0.5em;
 }
 
 .graph-period {
   transform: translateY(-0.3em);
+}
+
+.radio-title {
+  display: inline-block;
+  min-width: 130px;
 }
 
 #radio-dates-period,
@@ -87,7 +94,9 @@ select {
   width: 8em;
 }
 
-input {
+input[type="text"],
+input[type="number"],
+input[type="radio"] {
   border: 1px solid $grey;
   padding: 0.1em;
   font-size: 1.5em;
@@ -188,13 +197,14 @@ footer {
 .loading {
   align-items: center;
   background: rgba(255,255,255,0.9);
-  display: flex;
+  display: none;
   font-size: 1.2em;
   justify-content: center;
   padding-bottom: $default-padding;
   position: fixed;
   width: 100%;
   height: 100%;
+  z-index: 999;
 }
 
 .error {

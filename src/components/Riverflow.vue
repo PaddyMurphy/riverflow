@@ -1,7 +1,5 @@
 <template>
   <div class="riverflow">
-    <div class="loading" v-if="loading">Loading...</div>
-
     <div class="header">
       <h1 class="title">Riverflow</h1>
       <p class="tagline">Texas Edition</p>
@@ -9,9 +7,9 @@
 
     <div class="select-river-wrapper">
       <select class="select-river" v-model="selected" @change="changeRiver">
-        <option v-for="option in options" v-bind:value="option.value">
-            {{ option.text }}
-          </option>
+        <option v-for="option in options" :value="option.value" :disabled="option.value === '' ? true : false">
+          {{ option.text }}
+        </option>
       </select>
     </div>
 
@@ -19,7 +17,7 @@
       <div class="graph-controls-menu">
         <label class="graph-radio-label">
           <input type="radio" id="radio-dates-period" value="period" v-model="radioDateType">
-          <span>Search by number of days &nbsp;</span>
+          <span class="radio-title">Search by number of days &nbsp;</span>
 
           <input class="graph-period" type="number" min="7" max="90" v-model="period" v-show="radioDateType === 'period'">
         </label>
@@ -38,6 +36,8 @@
         <span class="label-name">end date</span>
         <input class="graph-end" type="text" v-model="endDate">
       </label>
+
+      <!-- <input class="" value="Search" type="button" @click="getUsgsData" v-show="latestCfs == null ? false : true"> -->
     </div>
 
     <div class="error" v-if="error">{{ error }}</div>
@@ -98,6 +98,7 @@ export default {
       latestTime: null,
       latitude: null,
       loading: false,
+      loadingEl: document.querySelector('.loading'),
       longitude: null,
       mapUrl: null,
       period: 7, // days
@@ -116,6 +117,7 @@ export default {
     }
   },
   mounted: function () {
+    var vm = this;
     // set selected river and fetch if routed from url
     if (this.$route.name === 'RiverflowUrl') {
       this.setSelectedRiver(this.$route.params.river);
@@ -124,10 +126,13 @@ export default {
     this.fetchHistory();
 
     new Flatpickr(this.$el.querySelector('.graph-start')); // eslint-disable-line
-    new Flatpickr(this.$el.querySelector('.graph-end')); // eslint-disable-line
+    new Flatpickr(this.$el.querySelector('.graph-end'), { // eslint-disable-line
+      maxDate: vm.endDate
+    });
   },
   watch: {
-    selected: 'getUsgsData'
+    selected: 'getUsgsData',
+    loading: 'toggleLoading'
   },
   methods: {
     setSelectedRiver: function (river) {
@@ -176,7 +181,7 @@ export default {
     },
     displayUsgsData: function (response) {
       var values = response.values;
-      // the last item in the last object is the last value
+      // the last item in the first object is the last value
       var orderedValues = values[0].value.reverse()[0];
       var date = new Date(orderedValues.dateTime);
 
@@ -285,6 +290,10 @@ export default {
     selectBackground: function (e) {
       this.backgroundColor = e.target.value;
       document.body.style.backgroundColor = e.target.value;
+    },
+    toggleLoading: function () {
+      var style = this.loading === true ? 'flex' : 'none';
+      this.loadingEl.style.display = style;
     }
   }
 }
