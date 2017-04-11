@@ -29,7 +29,7 @@
 
       <label class="graph-control-label" v-show="radioDateType === 'date'">
         <span class="label-name">start date</span>
-        <input class="graph-start" type="text" v-model="startDate" placeholder="Pick a date before today">
+        <input class="graph-start" type="text" v-model="startDate" placeholder="Pick a start date">
       </label>
 
       <label class="graph-control-label" v-show="radioDateType === 'date'">
@@ -125,7 +125,9 @@ export default {
 
     this.fetchHistory();
 
-    new Flatpickr(this.$el.querySelector('.graph-start')); // eslint-disable-line
+    new Flatpickr(this.$el.querySelector('.graph-start'), { // eslint-disable-line
+      maxDate: vm.endDate
+    });
     new Flatpickr(this.$el.querySelector('.graph-end'), { // eslint-disable-line
       maxDate: vm.endDate
     });
