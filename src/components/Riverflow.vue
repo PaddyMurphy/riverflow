@@ -58,6 +58,10 @@
 
       <div class="conditions" v-if="condition">{{ condition }}</div>
 
+      <div class="intro" v-if="!latestCfs">
+        <p>Select a river to get the latest flow rate and graph of flow history. Search by a period of days from today (default is 7) or a date range.</p>
+      </div>
+
       <div class="history" v-if="history.length > 1">
         <h4 class="history-title">History</h4>
         <ul class="time-history">
@@ -90,9 +94,14 @@ export default {
   data () {
     return {
       backgroundColor: null,
+      baseMapUrl: '//maps.google.com/?q=',
       condition: null,
+      endDate: new Date().toISOString().split('T')[0], // todays date YYYY-MM-DD
       error: null,
+      graphBaseUrl: '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS',
       graphImage: null,
+      graphType: '00060', // defaults to cfs
+      history: [],
       latestCfs: null,
       latestDate: null,
       latestTime: null,
@@ -101,19 +110,14 @@ export default {
       loadingEl: document.querySelector('.loading'),
       longitude: null,
       mapUrl: null,
+      options: rivers.data,
       period: 7, // days
+      radioDateType: 'period',
+      selected: 'selectRiver',
       siteName: null,
       startDate: null,
-      endDate: new Date().toISOString().split('T')[0], // todays date YYYY-MM-DD
-      valueBaseUrl: 'https://waterservices.usgs.gov/nwis/iv/?format=json&period=P1D',
-      graphBaseUrl: '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS',
-      graphType: '00060', // defaults to cfs
       STORAGE_KEY: 'riverflow-history',
-      selected: 'selectRiver',
-      baseMapUrl: '//maps.google.com/?q=',
-      options: rivers.data,
-      history: [],
-      radioDateType: 'period'
+      valueBaseUrl: 'https://waterservices.usgs.gov/nwis/iv/?format=json&period=P1D'
     }
   },
   mounted: function () {
@@ -300,10 +304,10 @@ export default {
       var r = (rgb >> 16) & 0xff; // extract red
       var g = (rgb >> 8) & 0xff; // extract green
       var b = (rgb >> 0) & 0xff; // extract blue
-
+      // adjust colors for perceived brightness
       var luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
       // adjust font color to backgound
-      if (luma < 45) {
+      if (luma < 128) {
         document.body.style.color = '#fff';
       } else {
         document.body.style.color = '#000';
