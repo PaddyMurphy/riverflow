@@ -11,34 +11,38 @@
           {{ option.text }}
         </option>
       </select>
+
+      <button class="btn-search-options" @click="toggleSearchOptions">search options</button>
     </div>
 
-    <div class="graph-options">
-      <div class="graph-controls-menu">
-        <label class="graph-radio-label">
-          <input type="radio" id="radio-dates-period" value="period" v-model="radioDateType">
-          <span class="radio-title">Search by number of days &nbsp;</span>
+    <transition name="fade">
+      <div class="graph-options" v-show="showSearchOptions">
+        <div class="graph-controls-menu">
+          <label class="graph-radio-label">
+            <input type="radio" id="radio-dates-period" value="period" v-model="radioDateType">
+            <span class="radio-title">Search by number of days &nbsp;</span>
 
-          <input class="graph-period" type="number" min="7" max="90" v-model="period" v-show="radioDateType === 'period'">
+            <input class="graph-period" type="number" min="7" max="90" v-model="period" v-show="radioDateType === 'period'">
+          </label>
+          <label class="graph-radio-label">
+            <input type="radio" id="radio-dates-date" value="date" v-model="radioDateType">
+            <span>Search by a date range</span>
+          </label>
+        </div>
+
+        <label class="graph-control-label" v-show="radioDateType === 'date'">
+          <span class="label-name">start date</span>
+          <input class="graph-start" type="text" v-model="startDate" placeholder="Pick a start date">
         </label>
-        <label class="graph-radio-label">
-          <input type="radio" id="radio-dates-date" value="date" v-model="radioDateType">
-          <span>Search by a date range</span>
+
+        <label class="graph-control-label" v-show="radioDateType === 'date'">
+          <span class="label-name">end date</span>
+          <input class="graph-end" type="text" v-model="endDate">
         </label>
+
+        <!-- <input class="" value="Search" type="button" @click="getUsgsData" v-show="latestCfs == null ? false : true"> -->
       </div>
-
-      <label class="graph-control-label" v-show="radioDateType === 'date'">
-        <span class="label-name">start date</span>
-        <input class="graph-start" type="text" v-model="startDate" placeholder="Pick a start date">
-      </label>
-
-      <label class="graph-control-label" v-show="radioDateType === 'date'">
-        <span class="label-name">end date</span>
-        <input class="graph-end" type="text" v-model="endDate">
-      </label>
-
-      <!-- <input class="" value="Search" type="button" @click="getUsgsData" v-show="latestCfs == null ? false : true"> -->
-    </div>
+    </transition>
 
     <div class="error" v-if="error">{{ error }}</div>
 
@@ -114,10 +118,11 @@ export default {
       period: 7, // days
       radioDateType: 'period',
       selected: 'selectRiver',
+      showSearchOptions: false,
       siteName: null,
       startDate: null,
       STORAGE_KEY: 'riverflow-history',
-      valueBaseUrl: 'https://waterservices.usgs.gov/nwis/iv/?format=json&period=P1D'
+      valueBaseUrl: 'https://waterservices.usgs.gov/nwis/iv/'
     }
   },
   mounted: function () {
@@ -153,10 +158,16 @@ export default {
     changeRiver: function (e) {
       this.selected = e.target[e.target.selectedIndex].value;
     },
+    toggleSearchOptions: function () {
+      if (this.showSearchOptions) {
+        this.showSearchOptions = false;
+      } else {
+        this.showSearchOptions = true;
+      }
+    },
     getUsgsData: function () {
       // // fetches usgs instant data, usgs graph service
       var vm = this;
-      var fullUrl = this.valueBaseUrl + '&parameterCd=' + this.graphType + '&sites=' + this.selected;
 
       // do not submit if it's the select message
       if (this.selected === 'selectRiver' || !this.selected) {
@@ -166,24 +177,31 @@ export default {
       this.loading = true;
 
       // fetch data
-      axios.get(fullUrl)
-        .then(function (response) {
-          vm.loading = false;
+      axios.get(this.valueBaseUrl, {
+        params: {
+          parameterCd: this.graphType,
+          sites: this.selected,
+          format: 'json',
+          period: 'P1D'
+        }
+      })
+      .then(response => {
+        vm.loading = false;
 
-          if (response.data.value.timeSeries[0]) {
-            vm.displayUsgsData(response.data.value.timeSeries[0]);
-            vm.displayGraph();
-            vm.error = null;
-          } else {
-            vm.error = 'no river data available';
-          }
-          // TODO: set the url
-        })
-        .catch(function (error) {
-          console.error(error.message);
-          vm.loading = false;
-          vm.error = error.message;
-        });
+        if (response.data.value.timeSeries[0]) {
+          vm.displayUsgsData(response.data.value.timeSeries[0]);
+          vm.displayGraph();
+          vm.error = null;
+        } else {
+          vm.error = 'no river data available';
+        }
+        // TODO: set the url
+      })
+      .catch(error => {
+        console.error(error.message);
+        vm.loading = false;
+        vm.error = error.message;
+      });
     },
     displayUsgsData: function (response) {
       var values = response.values;
@@ -289,9 +307,6 @@ export default {
       });
 
       this.saveHistory(this.history);
-    },
-    removeHistory: function (item) {
-      this.history.splice(this.history.indexOf(item), 1);
     },
     selectBackground: function (e) {
       this.backgroundColor = e.target.value;

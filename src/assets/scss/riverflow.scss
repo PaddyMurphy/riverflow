@@ -39,6 +39,7 @@ h1, h2, h3, h4 {
 }
 
 .select-river-wrapper {
+  display: flex;
   padding: 0 $default-padding $default-padding;
 }
 
@@ -46,6 +47,33 @@ select {
   background: #fff;
   font-size: 1.5em;
   width: 100%;
+}
+
+.btn-search-options {
+  font-weight: 500;
+  background: #fff;
+  border: 1px solid $grey;
+  cursor: pointer;
+  margin: 0 auto 0 1em;
+  transition: all 0.5s ease-in-out;
+  text-align: center;
+  user-select: none;
+  border-radius: 4px;
+
+  &:hover {
+    transition: all 0.5s ease;
+    opacity: 0.85;
+  }
+
+  &:active {
+    transition: all 0.5s ease;
+    opacity: 0.75;
+  }
+
+  &:focus {
+    outline: 1px dotted #959595;
+    outline-offset: -4px;
+  }
 }
 
 .graph-options-control {
@@ -65,7 +93,6 @@ select {
 .graph-controls-menu {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 0 1em;
 }
 
 .graph-radio-label {
@@ -213,3 +240,13 @@ footer {
   padding: $default-padding;
   width: 100%;
 }
+
+// transitions
+.fade-enter-active, .fade-leave-active {
+  transition: all 0.35s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
+  transform: translateY(-2em);
+}
+
