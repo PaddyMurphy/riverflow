@@ -50,15 +50,15 @@ select {
 }
 
 .btn-search-options {
-  font-weight: 500;
   background: #fff;
+  border-radius: 5px;
   border: 1px solid $grey;
   cursor: pointer;
+  font-weight: 500;
   margin: 0 auto 0 1em;
-  transition: all 0.5s ease-in-out;
   text-align: center;
+  transition: all 0.5s ease-in-out;
   user-select: none;
-  border-radius: 4px;
 
   &:hover {
     transition: all 0.5s ease;
@@ -104,6 +104,10 @@ select {
 
 .graph-period {
   transform: translateY(-0.3em);
+}
+
+.graph-loading {
+  padding: 1em 0;
 }
 
 .radio-title {
@@ -249,4 +253,3 @@ footer {
   opacity: 0;
   transform: translateY(-2em);
 }
-

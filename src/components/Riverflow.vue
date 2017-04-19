@@ -76,7 +76,12 @@
       </div>
     </div>
 
-    <div class="graph-wrapper" v-html="graphImage">loading...</div>
+    <div class="graph-wrapper">
+      <div class="graph-loading" v-show="loadingGraph">
+        Loading graph...
+      </div>
+      <div class="graph-image" v-html="graphImage"></div>
+    </div>
 
     <footer>
       created by <a href="//mountaindrawn.com">mountaindrawn.com</a>
@@ -112,6 +117,7 @@ export default {
       latitude: null,
       loading: false,
       loadingEl: document.querySelector('.loading'),
+      loadingGraph: false,
       longitude: null,
       mapUrl: null,
       options: rivers.data,
@@ -230,6 +236,7 @@ export default {
       //       effects: Pecas at Pecos river 08419000
       //       parm_cd=00060 (cfs) or 00065 (guage height ft)
       var image;
+      var vm = this;
       // NOTE: usgs documentation is incorrect 'startDt' is 'begin_date'
       var graphUrl = this.graphBaseUrl + '&parm_cd=' + this.graphType + '&site_no=' + this.selected;
 
@@ -245,7 +252,16 @@ export default {
 
       image = '<img src="' + graphUrl + '"class="graph" alt="USGS Water-data graph">';
 
-      this.graphImage = image;
+      // reset the graph and show / hide loading
+      this.graphImage = null;
+      this.loadingGraph = true;
+
+      var newImage = new Image();
+      newImage.src = graphUrl;
+      newImage.onload = function (e) {
+        vm.graphImage = image;
+        vm.loadingGraph = false;
+      }
 
       return image;
     },
