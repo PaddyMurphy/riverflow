@@ -1,12 +1,6 @@
 <template>
   <div class="streamflow">
-    <div class="header">
-      <h1 class="title">Riverflow</h1>
-      <p class="tagline">Texas Edition</p>
-    </div>
-
-    what
-
+    <h1>streamflow</h1>
   </div> <!-- END streamflow -->
 </template>
 

@@ -1,10 +1,5 @@
 <template>
   <div class="riverflow">
-    <div class="header">
-      <h1 class="title">Riverflow</h1>
-      <p class="tagline">Texas Edition</p>
-    </div>
-
     <div class="select-river-wrapper">
       <select class="select-river" v-model="selected" @change="changeRiver">
         <option v-for="option in options" :value="option.value" :disabled="option.value === '' ? true : false">
@@ -63,7 +58,7 @@
       <div class="conditions" v-if="condition">{{ condition }}</div>
 
       <div class="intro" v-if="!latestCfs">
-        <p>Select a river to get the latest flow rate and graph of flow history. Search by a period of days from today (default is 7) or a date range.</p>
+        <p>Select a river to get the latest flow rate, a graph of flow history, and photos. Search by a period of days from today (default is 7) or a date range.</p>
       </div>
 
       <div class="history" v-if="history.length > 1">
@@ -141,9 +136,7 @@ export default {
   components: {
     'photos': Photos
   },
-  computed: {
-
-  },
+  computed: {},
   mounted: function () {
     var vm = this;
     // set selected river and fetch if routed from url

@@ -11,7 +11,12 @@ import PhotoswipeUi from 'photoswipe/dist/photoswipe-ui-default';
 
 export default {
   name: 'photos',
-  props: ['siteName'],
+  props: {
+    siteName: {
+      type: String,
+      required: false
+    }
+  },
   data () {
     return {
       apiKey: '6c6069e831fb567b86c7d9b75c82624f',
@@ -23,16 +28,12 @@ export default {
       galleryImages: []
     }
   },
-  mounted: function () {
-    // var vm = this;
-  },
   watch: {
     siteName: function () {
       this.clearGallery();
       this.getFlickrImages();
     }
   },
-  computed: {},
   methods: {
     buildFlickrTags: function () {
       // get the tags from the select option text and trim everything after ':'
@@ -157,7 +158,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
+<style scoped lang="scss">
   @import '../../node_modules/photoswipe/dist/photoswipe.css';
   @import '../../node_modules/photoswipe/dist/default-skin/default-skin.css';
 
