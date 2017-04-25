@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    <!-- TODO: set to dev mode while testing -->
-    <navbar v-if="isDev" />
+    <navbar />
     <router-view></router-view>
   </div>
 </template>
@@ -13,15 +12,6 @@ export default {
   name: 'app',
   components: {
     'navbar': Navbar
-  },
-  computed: {
-    isDev: function () {
-      if (typeof (process.env.NODE_ENV) === 'string') {
-        return (process.env.NODE_ENV === 'development') ? 1 : 0;
-      } else {
-        return 0;
-      }
-    }
   }
 }
 </script>
