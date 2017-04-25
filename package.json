@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "flatpickr": "^2.4.8",
+    "photoswipe": "^4.1.1",
     "vue": "^2.1.10",
     "vue-router": "^2.2.0"
   },

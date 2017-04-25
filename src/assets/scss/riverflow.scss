@@ -1,42 +1,6 @@
 @import '../assets/scss/reset.scss';
+@import '../assets/scss/common.scss';
 @import '../../node_modules/flatpickr/dist/themes/dark.css';
-
-$orange: #fa6900;
-$orange-light: #F38630;
-$grey: #A6A6A6;
-$background-color: #E0E4CC;
-$conditions-color: rgba(255,255,255,0.2);
-$default-padding: 2em;
-
-html, body{
-  height: 100%;
-}
-
-body {
-  background: $background-color;
-}
-
-h1, h2, h3, h4 {
-  margin-top: 0;
-}
-
-.header {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-}
-
-:root .title, .tagline {
-  margin: 1em $default-padding;
-}
-
-.title {
-  font-size: 1.2em;
-}
-
-.tagline {
-  font-size: 1em;
-}
 
 .select-river-wrapper {
   display: flex;

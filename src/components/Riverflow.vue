@@ -83,6 +83,11 @@
       <div class="graph-image" v-html="graphImage"></div>
     </div>
 
+    <photos
+      :siteName="selectedText"
+      v-show="graphImage">
+    </photos>
+
     <footer>
       created by <a href="//mountaindrawn.com">mountaindrawn.com</a>
       <input type="color" class="color-picker" @change="selectBackground" value="#E0E4CC">
@@ -97,6 +102,7 @@ import axios from 'axios'
 import Flatpickr from 'flatpickr'
 import rivers from 'rivers.json'
 import conditions from 'conditions.json'
+import Photos from 'components/Photos'
 
 export default {
   name: 'riverflow',
@@ -124,12 +130,19 @@ export default {
       period: 7, // days
       radioDateType: 'period',
       selected: 'selectRiver',
+      selectedText: null,
       showSearchOptions: false,
       siteName: null,
       startDate: null,
       STORAGE_KEY: 'riverflow-history',
       valueBaseUrl: 'https://waterservices.usgs.gov/nwis/iv/'
     }
+  },
+  components: {
+    'photos': Photos
+  },
+  computed: {
+
   },
   mounted: function () {
     var vm = this;
@@ -163,6 +176,7 @@ export default {
     },
     changeRiver: function (e) {
       this.selected = e.target[e.target.selectedIndex].value;
+      this.selectedText = e.target[e.target.selectedIndex].text;
     },
     toggleSearchOptions: function () {
       if (this.showSearchOptions) {

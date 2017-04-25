@@ -308,7 +308,7 @@
 
 		getFlickrImages: function() {
 			// create document fragment to add all at once
-			var baseURL = 'https://api.flickr.com/services/rest/?&method=flickr.photos.search';
+			var baseURL = 'https://api.flickr.com/services/rest/?method=flickr.photos.search';
 			var docFrag = document.createDocumentFragment();
 			// get the new ones
 			$.getJSON(baseURL +
