@@ -6,7 +6,14 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import '../node_modules/element-ui/lib/theme-default/index.css'
+import Elementui from 'element-ui/lib/index'
+import locale from 'element-ui/lib/locale/lang/en'
 import Navbar from 'components/Navbar';
+// install element-ui globally
+// http://element.eleme.io/#/en-US
+Vue.use(Elementui, { locale });
 
 export default {
   name: 'app',

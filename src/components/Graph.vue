@@ -27,11 +27,10 @@ export default {
       required: true
     },
     startDate: {
-      type: String,
-      required: false
+      required: true
     },
     endDate: {
-      type: String,
+      type: [String, Date],
       required: true
     },
     graphType: {
@@ -55,8 +54,19 @@ export default {
       //       parm_cd=00060 (cfs) or 00065 (guage height ft)
       var image;
       var vm = this;
+      var start = this.startDate;
+      var end = this.endDate;
       // NOTE: usgs documentation is incorrect 'startDt' is 'begin_date'
       var graphUrl = this.graphBaseUrl + '&parm_cd=' + this.graphType + '&site_no=' + this.selected;
+
+      // TODO: look at computing this in Riverflow
+      if (typeof (this.startDate) === 'object') {
+        start = this.startDate.toISOString().split('T')[0]
+      }
+
+      if (typeof (this.endDate) === 'object') {
+        end = this.endDate.toISOString().split('T')[0]
+      }
 
       // period of days
       if (this.radioDateType === 'period') {
@@ -64,8 +74,8 @@ export default {
       }
 
       // add start and end
-      if (this.radioDateType === 'date' && this.startDate) {
-        graphUrl = graphUrl + '&begin_date=' + this.startDate + '&end_date=' + this.endDate;
+      if (this.radioDateType === 'date' && start) {
+        graphUrl = graphUrl + '&begin_date=' + start + '&end_date=' + end;
       }
 
       image = '<img src="' + graphUrl + '"class="graph" alt="USGS Water-data graph">';

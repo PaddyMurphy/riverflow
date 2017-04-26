@@ -1,41 +1,55 @@
 <template>
   <div class="riverflow">
     <div class="select-river-wrapper">
-      <select class="select-river" v-model="selected" @change="changeRiver">
-        <option v-for="option in options" :value="option.value" :disabled="option.value === '' ? true : false">
-          {{ option.text }}
-        </option>
-      </select>
+      <el-select class="select-river" v-model="selected" @change="changeRiver">
+        <el-option
+          v-for="option in options"
+          :value="option.value"
+          :label="option.text"
+          :disabled="option.value === '' ? true : false"
+        >
+        </el-option>
+      </el-select>
 
-      <button class="btn-search-options" @click="toggleSearchOptions">search options</button>
+      <el-collapse class="graph-options">
+        <el-collapse-item title="Search options" name="1">
+          <div class="graph-controls-menu">
+              <el-radio id="radio-dates-period" label="period" v-model="radioDateType">Search by number of days</el-radio>
+
+              <el-input-number
+                class="graph-period"
+                type="number"
+                :min="7"
+                :max="90"
+                v-model="period"
+                v-show="radioDateType === 'period'"
+              ></el-input-number>
+
+              <el-radio id="radio-dates-date" label="date" v-model="radioDateType">Search by a date range</el-radio>
+          </div>
+
+          <label class="graph-control-label" v-show="radioDateType === 'date'">
+            <span class="label-name">start date</span>
+            <!-- TODO: implement disabledDate -->
+            <el-date-picker
+              class="graph-start"
+              type="date"
+              v-model="startDate"
+              placeholder="Pick a start date"
+            ></el-date-picker>
+          </label>
+
+          <label class="graph-control-label" v-show="radioDateType === 'date'">
+            <span class="label-name">end date</span>
+            <el-date-picker
+              class="graph-end"
+              type="date"
+              v-model="endDate"
+            ></el-date-picker>
+          </label>
+        </el-collapse-item>
+      </el-collapse>
     </div>
-
-    <transition name="fade">
-      <div class="graph-options" v-show="showSearchOptions">
-        <div class="graph-controls-menu">
-          <label class="graph-radio-label">
-            <input type="radio" id="radio-dates-period" value="period" v-model="radioDateType">
-            <span class="radio-title">Search by number of days &nbsp;</span>
-
-            <input class="graph-period" type="number" min="7" max="90" v-model="period" v-show="radioDateType === 'period'">
-          </label>
-          <label class="graph-radio-label">
-            <input type="radio" id="radio-dates-date" value="date" v-model="radioDateType">
-            <span>Search by a date range</span>
-          </label>
-        </div>
-
-        <label class="graph-control-label" v-show="radioDateType === 'date'">
-          <span class="label-name">start date</span>
-          <input class="graph-start" type="text" v-model="startDate" placeholder="Pick a start date">
-        </label>
-
-        <label class="graph-control-label" v-show="radioDateType === 'date'">
-          <span class="label-name">end date</span>
-          <input class="graph-end" type="text" v-model="endDate">
-        </label>
-      </div>
-    </transition>
 
     <div class="error" v-if="error">{{ error }}</div>
 
@@ -93,7 +107,6 @@
 
 <script>
 import axios from 'axios'
-import Flatpickr from 'flatpickr'
 import rivers from 'rivers.json'
 import conditions from 'conditions.json'
 import Photos from 'components/Photos'
@@ -135,18 +148,11 @@ export default {
     'history': History
   },
   mounted: function () {
-    var vm = this;
+    // var vm = this;
     // set selected river and fetch if routed from url
     if (this.$route.name === 'RiverflowUrl') {
       this.setSelectedRiver(this.$route.params.river);
     }
-
-    new Flatpickr(this.$el.querySelector('.graph-start'), { // eslint-disable-line
-      maxDate: vm.endDate
-    });
-    new Flatpickr(this.$el.querySelector('.graph-end'), { // eslint-disable-line
-      maxDate: vm.endDate
-    });
   },
   watch: {
     selected: 'getUsgsData',
@@ -162,9 +168,16 @@ export default {
         }
       });
     },
-    changeRiver: function (e) {
-      this.selected = e.target[e.target.selectedIndex].value;
-      this.selectedText = e.target[e.target.selectedIndex].text;
+    changeRiver: function (value) {
+      var vm = this;
+
+      this.selected = value;
+      // get text from value and set the selected option
+      this.options.forEach(function (option, i) {
+        if (option.value === value) {
+          vm.selectedText = option.text;
+        }
+      });
     },
     toggleSearchOptions: function () {
       if (this.showSearchOptions) {

@@ -1,43 +1,21 @@
 @import '../assets/scss/reset.scss';
 @import '../assets/scss/common.scss';
 @import '../../node_modules/flatpickr/dist/themes/dark.css';
+@import '../../node_modules/element-ui/lib/theme-default/index.css';
 
 .select-river-wrapper {
   display: flex;
-  padding: 0 $default-padding $default-padding;
+  flex-direction: column;
+  padding: 0 $default-padding $default-padding / 2;
 }
 
-select {
-  background: #fff;
-  font-size: 1.5em;
+.select-river {
   width: 100%;
 }
 
 .btn-search-options {
-  background: #fff;
-  border-radius: 5px;
-  border: 1px solid $grey;
-  cursor: pointer;
-  font-weight: 500;
   margin: 0 auto 0 1em;
-  text-align: center;
-  transition: all 0.5s ease-in-out;
-  user-select: none;
-
-  &:hover {
-    transition: all 0.5s ease;
-    opacity: 0.85;
-  }
-
-  &:active {
-    transition: all 0.5s ease;
-    opacity: 0.75;
-  }
-
-  &:focus {
-    outline: 1px dotted #959595;
-    outline-offset: -4px;
-  }
+  transition: all 0.2s ease-out;
 }
 
 .graph-options-control {
@@ -45,8 +23,24 @@ select {
 }
 
 .graph-options {
+  border: 0;
   margin-top: 0;
-  padding: 1em $default-padding;
+  // override default styles
+  .el-collapse-item__header,
+  .el-collapse-item__wrap {
+    background: none;
+    border: 0;
+  }
+  // move 'Search options' to the right
+  .el-collapse-item__header {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+
+  .el-collapse-item__header__arrow {
+    margin: 0 0.8em 0 0.5em;
+  }
 }
 
 .graph-control-label {
@@ -58,7 +52,8 @@ select {
   display: flex;
   flex-wrap: wrap;
 }
-
+// flatpickr
+// TODO: replace with element
 .graph-radio-label {
   cursor: pointer;
   display: flex; // keeps aligned to radio
@@ -81,20 +76,16 @@ select {
 
 #radio-dates-period,
 #radio-dates-date {
-  flex: 0 0 auto; // keeps aligned to radio
+  // flex: 0 0 auto; // keeps aligned to radio
+  cursor: pointer;
+  display: flex; // keeps aligned to radio
+  flex: 1 1 50%;
+  margin: 0 auto 0.5em;
 }
 
 .label-name {
   display: inline-block;
   width: 8em;
-}
-
-input[type="text"],
-input[type="number"],
-input[type="radio"] {
-  border: 1px solid $grey;
-  padding: 0.1em;
-  font-size: 1.5em;
 }
 
 .condition-wrapper {
@@ -215,5 +206,4 @@ footer {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
   opacity: 0;
-  transform: translateY(-2em);
 }
