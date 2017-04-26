@@ -61,14 +61,12 @@
         <p>Select a river to get the latest flow rate, a graph of flow history, and photos. Search by a period of days from today (default is 7) or a date range.</p>
       </div>
 
-      <div class="history" v-if="history.length > 1">
-        <h4 class="history-title">History</h4>
-        <ul class="time-history">
-          <li v-for="item in history">
-            <b>{{ item.cfs }}</b> <abbr class="cfs" title="cubic feet per second">cfs</abbr> <span class="name">{{ item.name }}</span> <small>{{ item.date }} at {{ item.time }}</small>
-          </li>
-        </ul>
-      </div>
+      <history
+        :latestCfs="latestCfs"
+        :siteName="siteName"
+        :latestTime="latestTime"
+        :latestDate="latestDate"
+      />
     </div>
 
     <div class="graph-wrapper">
@@ -98,6 +96,7 @@ import Flatpickr from 'flatpickr'
 import rivers from 'rivers.json'
 import conditions from 'conditions.json'
 import Photos from 'components/Photos'
+import History from 'components/History'
 
 export default {
   name: 'riverflow',
@@ -111,10 +110,9 @@ export default {
       graphBaseUrl: '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS',
       graphImage: null,
       graphType: '00060', // defaults to cfs
-      history: [],
-      latestCfs: null,
-      latestDate: null,
-      latestTime: null,
+      latestCfs: '',
+      latestDate: '',
+      latestTime: '',
       latitude: null,
       loading: false,
       loadingEl: document.querySelector('.loading'),
@@ -127,24 +125,21 @@ export default {
       selected: 'selectRiver',
       selectedText: null,
       showSearchOptions: false,
-      siteName: null,
+      siteName: '',
       startDate: null,
-      STORAGE_KEY: 'riverflow-history',
       valueBaseUrl: 'https://waterservices.usgs.gov/nwis/iv/'
     }
   },
   components: {
-    'photos': Photos
+    'photos': Photos,
+    'history': History
   },
-  computed: {},
   mounted: function () {
     var vm = this;
     // set selected river and fetch if routed from url
     if (this.$route.name === 'RiverflowUrl') {
       this.setSelectedRiver(this.$route.params.river);
     }
-
-    this.fetchHistory();
 
     new Flatpickr(this.$el.querySelector('.graph-start'), { // eslint-disable-line
       maxDate: vm.endDate
@@ -230,8 +225,7 @@ export default {
       // timestamp of data
       this.latestDate = date.toDateString();
       this.latestTime = date.toLocaleTimeString();
-      // save data for history
-      this.addHistory();
+
       // display conditions
       this.displayConditions(parseInt(this.latestCfs, 10));
       // create map link
@@ -302,34 +296,6 @@ export default {
       formatted = formatted.replace(/-(\S*)-/g, ''); // exclude titles (i.e. --brazosriverbasin--)
 
       return formatted;
-    },
-    fetchHistory: function () {
-      var historyItems = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
-      var vm = this;
-
-      historyItems.forEach(function (item, index) {
-        vm.history.push(item);
-      })
-
-      return this.history
-    },
-    saveHistory: function (history) {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(history));
-    },
-    addHistory: function () {
-      // limit to 7, remove oldest
-      if (this.history.length >= 7) {
-        this.history.pop();
-      }
-      // create history object
-      this.history.unshift({
-        cfs: this.latestCfs,
-        name: this.siteName,
-        time: this.latestTime,
-        date: this.latestDate
-      });
-
-      this.saveHistory(this.history);
     },
     selectBackground: function (e) {
       this.backgroundColor = e.target.value;
