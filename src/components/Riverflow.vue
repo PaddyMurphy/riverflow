@@ -34,8 +34,6 @@
           <span class="label-name">end date</span>
           <input class="graph-end" type="text" v-model="endDate">
         </label>
-
-        <!-- <input class="" value="Search" type="button" @click="getUsgsData" v-show="latestCfs == null ? false : true"> -->
       </div>
     </transition>
 
@@ -69,16 +67,19 @@
       />
     </div>
 
-    <div class="graph-wrapper">
-      <div class="graph-loading" v-show="loadingGraph">
-        Loading graph...
-      </div>
-      <div class="graph-image" v-html="graphImage"></div>
-    </div>
+    <graph
+      :radioDateType="radioDateType"
+      :selected="selected"
+      :startDate="startDate"
+      :endDate="endDate"
+      :graphType="graphType"
+      :period="period"
+      v-show="selectedText"
+    />
 
     <photos
       :siteName="selectedText"
-      v-show="graphImage">
+      v-show="selectedText">
     </photos>
 
     <footer>
@@ -96,6 +97,7 @@ import Flatpickr from 'flatpickr'
 import rivers from 'rivers.json'
 import conditions from 'conditions.json'
 import Photos from 'components/Photos'
+import Graph from 'components/Graph'
 import History from 'components/History'
 
 export default {
@@ -107,8 +109,6 @@ export default {
       condition: null,
       endDate: new Date().toISOString().split('T')[0], // todays date YYYY-MM-DD
       error: null,
-      graphBaseUrl: '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS',
-      graphImage: null,
       graphType: '00060', // defaults to cfs
       latestCfs: '',
       latestDate: '',
@@ -116,7 +116,6 @@ export default {
       latitude: null,
       loading: false,
       loadingEl: document.querySelector('.loading'),
-      loadingGraph: false,
       longitude: null,
       mapUrl: null,
       options: rivers.data,
@@ -132,6 +131,7 @@ export default {
   },
   components: {
     'photos': Photos,
+    'graph': Graph,
     'history': History
   },
   mounted: function () {
@@ -198,7 +198,6 @@ export default {
 
         if (response.data.value.timeSeries[0]) {
           vm.displayUsgsData(response.data.value.timeSeries[0]);
-          vm.displayGraph();
           vm.error = null;
         } else {
           vm.error = 'no river data available';
@@ -230,41 +229,6 @@ export default {
       this.displayConditions(parseInt(this.latestCfs, 10));
       // create map link
       this.mapUrl = this.baseMapUrl + this.latitude + ',+' + this.longitude;
-    },
-    displayGraph: function () {
-      // display a graph of the flow
-      // TODO: catch error for undefined params
-      //       effects: Pecas at Pecos river 08419000
-      //       parm_cd=00060 (cfs) or 00065 (guage height ft)
-      var image;
-      var vm = this;
-      // NOTE: usgs documentation is incorrect 'startDt' is 'begin_date'
-      var graphUrl = this.graphBaseUrl + '&parm_cd=' + this.graphType + '&site_no=' + this.selected;
-
-      // period of days
-      if (this.radioDateType === 'period') {
-        graphUrl = graphUrl + '&period=' + this.period;
-      }
-
-      // add start and end
-      if (this.radioDateType === 'date' && this.startDate) {
-        graphUrl = graphUrl + '&begin_date=' + this.startDate + '&end_date=' + this.endDate;
-      }
-
-      image = '<img src="' + graphUrl + '"class="graph" alt="USGS Water-data graph">';
-
-      // reset the graph and show / hide loading
-      this.graphImage = null;
-      this.loadingGraph = true;
-
-      var newImage = new Image();
-      newImage.src = graphUrl;
-      newImage.onload = function (e) {
-        vm.graphImage = image;
-        vm.loadingGraph = false;
-      }
-
-      return image;
     },
     displayConditions: function (flowRate) {
       // check the range of the cfs and display the appropriate message
