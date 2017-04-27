@@ -67,11 +67,9 @@
         </div>
       </div>
 
-      <div class="conditions" v-if="condition">{{ condition }}</div>
+      <conditions :latestCfs="latestCfs" />
 
-      <div class="intro" v-if="!latestCfs">
-        <p>Select a river to get the latest flow rate, a graph of flow history, and photos. Search by a period of days from today (default is 7) or a date range.</p>
-      </div>
+      <intro :period="period" v-if="!latestCfs" />
 
       <history
         :latestCfs="latestCfs"
@@ -108,7 +106,8 @@
 <script>
 import axios from 'axios'
 import rivers from 'rivers.json'
-import conditions from 'conditions.json'
+import Intro from 'components/Intro'
+import Conditions from 'components/Conditions'
 import Photos from 'components/Photos'
 import Graph from 'components/Graph'
 import History from 'components/History'
@@ -119,7 +118,6 @@ export default {
     return {
       backgroundColor: null,
       baseMapUrl: '//maps.google.com/?q=',
-      condition: null,
       endDate: new Date().toISOString().split('T')[0], // todays date YYYY-MM-DD
       error: null,
       graphType: '00060', // defaults to cfs
@@ -143,6 +141,8 @@ export default {
     }
   },
   components: {
+    'intro': Intro,
+    'conditions': Conditions,
     'photos': Photos,
     'graph': Graph,
     'history': History
@@ -238,30 +238,8 @@ export default {
       this.latestDate = date.toDateString();
       this.latestTime = date.toLocaleTimeString();
 
-      // display conditions
-      this.displayConditions(parseInt(this.latestCfs, 10));
       // create map link
       this.mapUrl = this.baseMapUrl + this.latitude + ',+' + this.longitude;
-    },
-    displayConditions: function (flowRate) {
-      // check the range of the cfs and display the appropriate message
-      if (flowRate === 0) {
-        this.condition = conditions.flow0;
-      } else if ((flowRate > 0) && (flowRate < 50)) {
-        this.condition = conditions.flow1;
-      } else if ((flowRate >= 50) && (flowRate < 100)) {
-        this.condition = conditions.flow2;
-      } else if ((flowRate >= 100) && (flowRate < 300)) {
-        this.condition = conditions.flow3;
-      } else if ((flowRate >= 300) && (flowRate < 600)) {
-        this.condition = conditions.flow4;
-      } else if ((flowRate >= 600) && (flowRate < 2000)) {
-        this.condition = conditions.flow5;
-      } else if (flowRate >= 2000) {
-        this.condition = conditions.flow6;
-      }
-
-      return this.condition;
     },
     formatRiverName: function (name) {
       // parse the option text (San Marcos River : Luling)
