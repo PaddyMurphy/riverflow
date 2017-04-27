@@ -1,25 +1,11 @@
 @import '../assets/scss/reset.scss';
-@import '../assets/scss/common.scss';
-@import '../../node_modules/flatpickr/dist/themes/dark.css';
+@import '../assets/scss/variables.scss';
 @import '../../node_modules/element-ui/lib/theme-default/index.css';
 
 .select-river-wrapper {
   display: flex;
   flex-direction: column;
   padding: 0 $default-padding $default-padding / 2;
-}
-
-.select-river {
-  width: 100%;
-}
-
-.btn-search-options {
-  margin: 0 auto 0 1em;
-  transition: all 0.2s ease-out;
-}
-
-.graph-options-control {
-  padding: 0 $default-padding;
 }
 
 .graph-options {
@@ -41,24 +27,15 @@
   .el-collapse-item__header__arrow {
     margin: 0 0.8em 0 0.5em;
   }
+
+  .el-radio__label {
+    cursor: pointer;
+  }
 }
 
 .graph-control-label {
   display: block;
   margin: 0 0 1em;
-}
-
-.graph-controls-menu {
-  display: flex;
-  flex-wrap: wrap;
-}
-// flatpickr
-// TODO: replace with element
-.graph-radio-label {
-  cursor: pointer;
-  display: flex; // keeps aligned to radio
-  flex: 1 1 50%;
-  margin: 0 auto 0.5em;
 }
 
 .graph-period {
@@ -69,14 +46,8 @@
   padding: 1em 0;
 }
 
-.radio-title {
-  display: inline-block;
-  min-width: 130px;
-}
-
 #radio-dates-period,
 #radio-dates-date {
-  // flex: 0 0 auto; // keeps aligned to radio
   cursor: pointer;
   display: flex; // keeps aligned to radio
   flex: 1 1 50%;
@@ -148,16 +119,6 @@
 
 .history-title {
   margin: 0 0 .25em;
-}
-
-.graph {
-  image-rendering: pixelated;
-  height: auto;
-  width: 100%;
-}
-
-.graph-wrapper {
-  text-align: center;
 }
 
 footer {

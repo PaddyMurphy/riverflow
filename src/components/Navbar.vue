@@ -31,6 +31,24 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+@import '../assets/scss/variables.scss';
 
+.header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+:root .title, .tagline {
+  margin: 1em $default-padding;
+}
+
+.title {
+  font-size: 1.2em;
+}
+
+.tagline {
+  font-size: 1em;
+}
 </style>

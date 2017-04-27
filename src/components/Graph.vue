@@ -98,5 +98,14 @@ export default {
 </script>
 
 <style lang="scss">
+  // unable to scope
+  .graph {
+    image-rendering: pixelated;
+    height: auto;
+    width: 100%;
+  }
 
+  .graph-wrapper {
+    text-align: center;
+  }
 </style>
