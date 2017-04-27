@@ -33,6 +33,11 @@
   }
 }
 
+.graph-controls-menu {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .graph-control-label {
   display: block;
   margin: 0 0 1em;

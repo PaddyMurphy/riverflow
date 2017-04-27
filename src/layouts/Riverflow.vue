@@ -1,5 +1,6 @@
 <template>
   <div class="riverflow">
+
     <div class="select-river-wrapper">
       <el-select class="select-river" v-model="selected" @change="changeRiver">
         <el-option
@@ -49,7 +50,7 @@
           </label>
         </el-collapse-item>
       </el-collapse>
-    </div>
+    </div> <!-- END select-river-wrapper -->
 
     <div class="error" v-if="error">{{ error }}</div>
 
@@ -96,6 +97,7 @@
 
     <footer>
       created by <a href="//mountaindrawn.com">mountaindrawn.com</a>
+      <!-- <el-color-picker v-model="backgroundColor" @change="selectBackground"></el-color-picker> -->
       <input type="color" class="color-picker" @change="selectBackground" value="#E0E4CC">
       <small class="color-value">{{backgroundColor}}</small>
     </footer>

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Riverflow from 'components/Riverflow'
-import Streamflow from 'components/Streamflow'
+import Riverflow from 'layouts/Riverflow'
+import Streamflow from 'layouts/Streamflow'
 
 Vue.use(Router)
 
@@ -19,7 +19,7 @@ export default new Router({
       component: Riverflow
     },
     {
-      path: '/flow/:river', // TODO: setup url routing
+      path: '/:river', // TODO: setup url routing
       name: 'RiverflowUrl',
       component: Riverflow
     }

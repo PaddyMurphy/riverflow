@@ -75,14 +75,14 @@ export default {
       var vm = this;
       var gallery = document.querySelector('.gallery');
       var docFrag = document.createDocumentFragment();
-      var image, link, photoURL, square, photoMedium, photoLarge, photoHref; // eslint-disable-line
+      var image, link, photoURL, square, photoOriginal, photoLarge, photoHref; // eslint-disable-line
 
       photos.forEach(function (v, i) {
         // set urls
         vm.photoURL = '//farm' + v.farm + '.static.flickr.com/' + v.server + '/' + v.id + '_' + v.secret;
         vm.square = vm.photoURL + '_q.jpg'; // q = 150sq
-        vm.photoMedium = vm.photoURL + '_m.jpg'; // m = 240long
         vm.photoLarge = vm.photoURL + '_b.jpg'; // b = 1024 on longest side,
+        vm.photoOriginal = vm.photoURL + '_o.jpg';
         // set the photo href for larger views
         vm.photoHref = '//www.flickr.com/photos/' + v.owner + '/' + v.id;
 
