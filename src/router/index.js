@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Riverflow from 'layouts/Riverflow'
-import Streamflow from 'layouts/Streamflow'
+import Riverflow from '@/layouts/Riverflow'
+import Streamflow from '@/layouts/Streamflow'
 
 Vue.use(Router)
 

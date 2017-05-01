@@ -11,21 +11,10 @@ import '../node_modules/element-ui/lib/theme-default/index.css'
 // import { Collapse, CollapseItem, DatePicker, Input, InputNumber, Radio, Select, Option } from 'element-ui/lib/'
 import Elementui from 'element-ui/lib/index'
 import locale from 'element-ui/lib/locale/lang/en'
-import Navbar from 'components/Navbar'
+import Navbar from '@/components/Navbar'
 // install element-ui globally
 // http://element.eleme.io/#/en-US
 Vue.use(Elementui, { locale });
-
-// NOTE: datepicker locale doesn't change with this
-//       check out http://element.eleme.io/#/en-US/component/i18n
-// Vue.use(Collapse, { locale });
-// Vue.use(CollapseItem, { locale });
-// Vue.use(DatePicker, { locale });
-// Vue.use(Input, { locale });
-// Vue.use(InputNumber, { locale });
-// Vue.use(Radio, { locale });
-// Vue.use(Select, { locale });
-// Vue.use(Option, { locale });
 
 export default {
   name: 'app',

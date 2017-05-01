@@ -2,9 +2,11 @@
   <div class="riverflow">
 
     <div class="select-river-wrapper">
-      <el-select class="select-river" v-model="selected" @change="changeRiver">
+      <!-- TODO: add filterable -->
+      <el-select class="select-river" v-model="selected" @change="changeRiver" :placeholder="selectedText">
         <el-option
           v-for="option in options"
+          :key="option.value"
           :value="option.value"
           :label="option.text"
           :disabled="option.value === '' ? true : false"
@@ -107,12 +109,12 @@
 
 <script>
 import axios from 'axios'
-import rivers from 'rivers.json'
-import Intro from 'components/Intro'
-import Conditions from 'components/Conditions'
-import Photos from 'components/Photos'
-import Graph from 'components/Graph'
-import History from 'components/History'
+import rivers from '@/rivers.json'
+import Intro from '@/components/Intro'
+import Conditions from '@/components/Conditions'
+import Photos from '@/components/Photos'
+import Graph from '@/components/Graph'
+import History from '@/components/History'
 
 export default {
   name: 'riverflow',
@@ -135,7 +137,7 @@ export default {
       period: 7, // days
       radioDateType: 'period',
       selected: 'selectRiver',
-      selectedText: null,
+      selectedText: 'Select a river',
       showSearchOptions: false,
       siteName: '',
       startDate: null,
@@ -180,6 +182,8 @@ export default {
           vm.selectedText = option.text;
         }
       });
+      // clear filterable input
+      vm.$el.querySelector('.el-input__inner').value = '';
     },
     toggleSearchOptions: function () {
       if (this.showSearchOptions) {
@@ -284,5 +288,181 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  @import '../assets/scss/riverflow.scss';
+  // NOTE: webpack tests do not find nested includes
+  // @import '../assets/scss/riverflow.scss';
+  @import '../assets/scss/reset.scss';
+  @import '../assets/scss/variables.scss';
+  @import '../../node_modules/element-ui/lib/theme-default/index.css';
+
+  .select-river-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 0 $default-padding $default-padding / 2;
+  }
+
+  .graph-options {
+    border: 0;
+    margin-top: 0;
+    // override default styles
+    .el-collapse-item__header,
+    .el-collapse-item__wrap {
+      background: none;
+      border: 0;
+    }
+    // move 'Search options' to the right
+    .el-collapse-item__header {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+    }
+
+    .el-collapse-item__header__arrow {
+      margin: 0 0.8em 0 0.5em;
+    }
+
+    .el-radio__label {
+      cursor: pointer;
+    }
+  }
+
+  .graph-controls-menu {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .graph-control-label {
+    display: block;
+    margin: 0 0 1em;
+  }
+
+  .graph-period {
+    transform: translateY(-0.3em);
+  }
+
+  .graph-loading {
+    padding: 1em 0;
+  }
+
+  #radio-dates-period,
+  #radio-dates-date {
+    cursor: pointer;
+    display: flex; // keeps aligned to radio
+    flex: 1 1 50%;
+    margin: 0 auto 0.5em;
+  }
+
+  .label-name {
+    display: inline-block;
+    width: 8em;
+  }
+
+  .condition-wrapper {
+    background: $conditions-color;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1em;
+
+    > div {
+      flex: 1 1 33.3%;
+      padding: 1em
+    }
+  }
+
+  .latest-cfs {
+    text-align: center;
+  }
+
+  .rate-group {
+    align-items: baseline;
+    display: flex;
+    justify-content: center;
+  }
+
+  .rate {
+    color: $orange;
+    font-weight: bold;
+    font-size: 4em;
+  }
+
+  .rate-abbr {
+    color: $orange-light;
+    font-size: 2em;
+    font-weight: bold;
+
+    &[title] {
+      border-bottom: 1px dotted;
+    }
+  }
+
+  .time-history {
+    font-size: 0.8em;
+    margin: 0;
+    padding: 0;
+
+    li {
+      list-style: none;
+      padding: 0 0 .25em;
+    }
+    // hide the first once since the data is already displayed
+    li:first-child {
+      display: none !important;
+    }
+
+    .cfs {
+      font-size: 0.8em;
+      margin-left: -0.20em;
+    }
+  }
+
+  .history-title {
+    margin: 0 0 .25em;
+  }
+
+  footer {
+    font-size: 0.8em;
+    padding: $default-padding 0;
+    text-align: center;
+  }
+
+  .color-picker {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    opacity: 0.3;
+    transition: opacity 0.25s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .loading {
+    align-items: center;
+    background: rgba(255,255,255,0.9);
+    display: none;
+    font-size: 1.2em;
+    justify-content: center;
+    padding-bottom: $default-padding;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+  }
+
+  .error {
+    font-size: 1.2em;
+    text-align: center;
+    padding: $default-padding;
+    width: 100%;
+  }
+
+  // transitions
+  .fade-enter-active, .fade-leave-active {
+    transition: all 0.35s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+    opacity: 0;
+  }
 </style>

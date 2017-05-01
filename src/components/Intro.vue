@@ -1,6 +1,6 @@
 <template>
   <div class="intro">
-    <p>Select a river to get the latest flow rate, a graph of flow history, and photos. Search by a period of days from today (default is {{ period }}) or a date range.</p>
+    <p>Select a river to get the latest flow rate, a graph of flow history, and photos. Search by a period of days from today (default is <span class="period">{{ period }}</span>) or a date range.</p>
   </div>
 </template>
 

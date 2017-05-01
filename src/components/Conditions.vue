@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import conditions from 'conditions.json'
+
+import conditions from '@/conditions.json'
 
 export default {
   name: 'conditions',
