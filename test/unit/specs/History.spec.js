@@ -4,12 +4,15 @@ import Vue from 'vue'
 import History from '@/components/History'
 
 describe('History.vue', () => {
-  let Constructor = Vue.extend(History)
+  const Constructor = Vue.extend(History)
   // history of > 1 required to render
-  Constructor = Constructor.extend({
+  const vm = new Constructor({
     data () {
       return {
-        history: '[{"cfs":"116","name":"Brazos Rv nr Palo Pinto, TX","time":"1:15:00 PM","date":"Mon May 01 2017"},{"cfs":"12","name":"Brazos Rv nr Glen Rose, TX","time":"1:00:00 PM","date":"Mon May 01 2017"}]'
+        history: [
+          {'cfs': '116', 'name': 'Brazos Rv nr Palo Pinto, TX', 'time': '1:15:00 PM', 'date': 'Mon May 01 2017'},
+          {'cfs': '12', 'name': 'Brazos Rv nr Glen Rose, TX', 'time': '1:00:00 PM', 'date': 'Mon May 01 2017'}
+        ]
       }
     },
     propsData: {
@@ -18,12 +21,19 @@ describe('History.vue', () => {
       latestDate: 'Mon May 01 2017',
       latestTime: '1:15:00 PM'
     }
-  })
+  }).$mount();
 
-  it('renders a div with class history', () => {
-    const vm = new Constructor().$mount();
-
+  it('should render the history component', () => {
     expect(vm.$el.querySelector('.history-title')
       .textContent).to.equal('History')
+  });
+
+  it('should add a new history item', () => {
+    expect(vm.history.length).to.equal(2)
+    vm.addHistory();
+    expect(vm.history.length).to.equal(3)
+    // clean up
+    window.localStorage.clear();
+    vm.history = [];
   });
 })

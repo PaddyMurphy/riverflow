@@ -1,5 +1,5 @@
 <template>
-  <div class="history" v-if="history.length > 1">
+  <div class="history" v-show="history.length > 1">
     <h4 class="history-title">History</h4>
     <ul class="time-history">
       <li v-for="item in history">
@@ -48,7 +48,7 @@ export default {
     fetchHistory: function () {
       var vm = this;
 
-      var historyItems = JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
+      var historyItems = JSON.parse(window.localStorage.getItem(this.STORAGE_KEY) || '[]');
 
       historyItems.forEach(function (item, index) {
         vm.history.push(item);
@@ -57,7 +57,7 @@ export default {
       return this.history
     },
     saveHistory: function (history) {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(history));
+      window.localStorage.setItem(this.STORAGE_KEY, JSON.stringify(history));
     },
     addHistory: function () {
       // limit to 7, remove oldest
