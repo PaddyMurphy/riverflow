@@ -1,5 +1,5 @@
 <template>
-  <div class="conditions" v-if="condition">
+  <div class="conditions" v-show="condition">
     {{ condition }}
   </div>
 </template>
@@ -12,7 +12,7 @@ export default {
   name: 'conditions',
   data () {
     return {
-      condition: null
+      condition: undefined
     }
   },
   props: {

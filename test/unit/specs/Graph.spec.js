@@ -1,6 +1,4 @@
 import Vue from 'vue'
-// avoriaz is a vue / mocha wrapper
-// import { mount } from 'avoriaz';
 import Graph from '@/components/Graph'
 
 describe('Graph.vue', () => {

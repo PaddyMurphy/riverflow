@@ -5,6 +5,8 @@
 </template>
 
 <script>
+// required for tests, native Promise unavailable for axios
+import 'babel-polyfill';
 import axios from 'axios';
 import Photoswipe from 'photoswipe';
 import PhotoswipeUi from 'photoswipe/dist/photoswipe-ui-default';
@@ -20,7 +22,7 @@ export default {
   data () {
     return {
       apiKey: '6c6069e831fb567b86c7d9b75c82624f',
-      flickrTags: null,
+      flickrTags: undefined,
       flickrUrl: 'https://api.flickr.com/services/rest/?&method=flickr.photos.search',
       loading: false,
       disableButton: false,
@@ -40,6 +42,7 @@ export default {
       this.flickrTags = this.siteName.replace(/:.*/, '').trim();
       // combine the river name as one tag
       this.flickrTags = this.flickrTags.replace(/\s+/g, '+');
+      this.flickrTags = this.flickrTags.replace(',+', '+');
       // combine the river name and keep 'kayak' as the other tag
       this.flickrTags = 'kayak,Texas,' + this.flickrTags;
 
