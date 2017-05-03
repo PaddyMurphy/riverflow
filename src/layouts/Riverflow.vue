@@ -120,19 +120,19 @@ export default {
   name: 'riverflow',
   data () {
     return {
-      backgroundColor: null,
+      backgroundColor: undefined,
       baseMapUrl: '//maps.google.com/?q=',
       endDate: new Date().toISOString().split('T')[0], // todays date YYYY-MM-DD
-      error: null,
+      error: undefined,
       graphType: '00060', // defaults to cfs
       latestCfs: '',
       latestDate: '',
       latestTime: '',
-      latitude: null,
+      latitude: undefined,
       loading: false,
       loadingEl: document.querySelector('.loading'),
-      longitude: null,
-      mapUrl: null,
+      longitude: undefined,
+      mapUrl: undefined,
       options: rivers.data,
       period: 7, // days
       radioDateType: 'period',
@@ -140,7 +140,7 @@ export default {
       selectedText: 'Select a river',
       showSearchOptions: false,
       siteName: '',
-      startDate: null,
+      startDate: undefined,
       valueBaseUrl: 'https://waterservices.usgs.gov/nwis/iv/'
     }
   },

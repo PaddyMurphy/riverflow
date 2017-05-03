@@ -32,6 +32,10 @@ describe('History.vue', () => {
     expect(vm.history.length).to.equal(2)
     vm.addHistory();
     expect(vm.history.length).to.equal(3)
+  });
+
+  // runs after all tests in this block
+  after(function () {
     // clean up
     window.localStorage.clear();
     vm.history = [];

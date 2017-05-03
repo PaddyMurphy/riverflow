@@ -3,14 +3,12 @@ import Intro from '@/components/Intro'
 
 describe('Intro.vue', () => {
   it('should render the correct period', () => {
-    let Constructor = Vue.extend(Intro)
-    Constructor = Constructor.extend({
+    const Constructor = Vue.extend(Intro)
+    const vm = new Constructor({
       propsData: {
         period: 7
       }
-    })
-
-    const vm = new Constructor().$mount()
+    }).$mount()
 
     expect(vm.$el.querySelector('.period').textContent)
       .to.equal('7')

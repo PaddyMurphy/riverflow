@@ -13,7 +13,7 @@ export default {
   data () {
     return {
       graphBaseUrl: '//waterdata.usgs.gov/nwisweb/graph?agency_cd=USGS',
-      graphImage: null,
+      graphImage: undefined,
       loadingGraph: false
     }
   },
@@ -54,35 +54,35 @@ export default {
       //       parm_cd=00060 (cfs) or 00065 (guage height ft)
       var image;
       var vm = this;
-      var start = this.startDate;
-      var end = this.endDate;
+      var start = vm.startDate;
+      var end = vm.endDate;
       // NOTE: usgs documentation is incorrect 'startDt' is 'begin_date'
-      var graphUrl = this.graphBaseUrl + '&parm_cd=' + this.graphType + '&site_no=' + this.selected;
+      var graphUrl = vm.graphBaseUrl + '&parm_cd=' + vm.graphType + '&site_no=' + vm.selected;
 
       // TODO: look at computing this in Riverflow
-      if (typeof (this.startDate) === 'object') {
-        start = this.startDate.toISOString().split('T')[0]
+      if (typeof (vm.startDate) === 'object') {
+        start = vm.startDate.toISOString().split('T')[0]
       }
 
-      if (typeof (this.endDate) === 'object') {
-        end = this.endDate.toISOString().split('T')[0]
+      if (typeof (vm.endDate) === 'object') {
+        end = vm.endDate.toISOString().split('T')[0]
       }
 
       // period of days
-      if (this.radioDateType === 'period') {
-        graphUrl = graphUrl + '&period=' + this.period;
+      if (vm.radioDateType === 'period') {
+        graphUrl = graphUrl + '&period=' + vm.period;
       }
 
       // add start and end
-      if (this.radioDateType === 'date' && start) {
+      if (vm.radioDateType === 'date' && start) {
         graphUrl = graphUrl + '&begin_date=' + start + '&end_date=' + end;
       }
 
       image = '<img src="' + graphUrl + '"class="graph" alt="USGS Water-data graph">';
 
       // reset the graph and show / hide loading
-      this.graphImage = null;
-      this.loadingGraph = true;
+      vm.graphImage = undefined;
+      vm.loadingGraph = true;
 
       var newImage = new Image();
       newImage.src = graphUrl;
