@@ -7,6 +7,9 @@ describe('Navbar.vue', () => {
     const vm = new Constructor().$mount()
 
     expect(vm.$el.querySelector('.title').textContent)
-      .to.equal('Riverflow')
+      .to.equal(vm.$data.title)
+
+    expect(vm.$el.querySelector('.tagline').textContent)
+      .to.equal(vm.$data.tagline)
   })
 })

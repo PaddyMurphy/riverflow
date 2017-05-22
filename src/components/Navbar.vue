@@ -9,9 +9,9 @@
         Streamflow
       </router-link>
     </nav>
-    <div class="header">
-      <h1 class="title">Riverflow</h1>
-      <p class="tagline">Texas Edition</p>
+    <div class="header" v-once>
+      <h1 class="title">{{ title }}</h1>
+      <p class="tagline">{{ tagline }}</p>
     </div>
   </div>
 </template>
@@ -19,6 +19,12 @@
 <script>
 export default {
   name: 'navbar',
+  data () {
+    return {
+      title: 'Riverflow',
+      tagline: 'Texas Edition'
+    }
+  },
   computed: {
     isDev: function () {
       if (typeof (process.env.NODE_ENV) === 'string') {

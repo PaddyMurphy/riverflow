@@ -1,6 +1,6 @@
 <template>
   <div class="history" v-show="history.length > 1">
-    <h4 class="history-title">History</h4>
+    <h4 class="history-title">{{ title }}</h4>
     <ul class="time-history">
       <li v-for="item in history">
         <b>{{ item.cfs }}</b> <abbr class="cfs" title="cubic feet per second">cfs</abbr> <span class="name">{{ item.name }}</span> <small>{{ item.date }} at {{ item.time }}</small>
@@ -16,6 +16,7 @@ export default {
   name: 'history',
   data () {
     return {
+      title: 'History',
       history: [],
       STORAGE_KEY: 'riverflow-history'
     }

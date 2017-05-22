@@ -16,7 +16,7 @@ describe('Photos.vue', () => {
     expect(vm.$data.galleryImages.length).to.equal(0);
   });
 
-  it('buildFlickrTags should return comma delimite list', () => {
+  it('buildFlickrTags should return comma delimited list', () => {
     vm = new Constructor({
       propsData: {
         siteName: 'Barton Creek : Loop 360'
@@ -26,6 +26,18 @@ describe('Photos.vue', () => {
     // flickr tags should be populated
     vm.buildFlickrTags()
     expect(vm.$data.flickrTags).to.equal(correctTags);
+  });
+
+  it('fetch images from flickr api', () => {
+    vm = new Constructor({
+      propsData: {
+        siteName: 'Barton Creek : Loop 360'
+      }
+    }).$mount();
+    // TODO: test emitting...
+    // flickr tags should be populated
+    vm.getFlickrImages();
+    expect(vm.$data.loading).to.be.true;
   });
 
   afterEach(function () {

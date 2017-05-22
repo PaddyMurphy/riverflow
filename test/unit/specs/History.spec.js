@@ -25,7 +25,7 @@ describe('History.vue', () => {
 
   it('should render the history component', () => {
     expect(vm.$el.querySelector('.history-title')
-      .textContent).to.equal('History')
+      .textContent).to.equal(vm.$data.title)
   });
 
   it('should add a new history item', () => {
