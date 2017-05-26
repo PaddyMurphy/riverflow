@@ -1,27 +1,30 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Riverflow from '@/layouts/Riverflow'
-import Streamflow from '@/layouts/Streamflow'
+import Rivertable from '@/layouts/Rivertable'
 
 Vue.use(Router)
 
 export default new Router({
-  linkActiveClass: 'is-active',
+  linkExactActiveClass: 'is-active',
   routes: [
     {
-      path: '/streamflow',
-      name: 'Streamflow',
-      component: Streamflow
-    },
-    {
       path: '/',
-      name: 'Riverflow',
-      component: Riverflow
+      name: 'Home',
+      component: Rivertable
     },
     {
-      path: '/:river', // TODO: setup url routing
-      name: 'RiverflowUrl',
-      component: Riverflow
+      path: '/rivertable',
+      name: 'Rivertable',
+      component: Rivertable
+    },
+    {
+      path: '/rivertable/:river',
+      name: 'RivertableUrl',
+      component: Rivertable
+    },
+    {
+      path: '*',
+      redirect: '/'
     }
   ]
 })

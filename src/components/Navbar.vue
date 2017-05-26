@@ -1,19 +1,10 @@
 <template>
-  <div>
-    <!-- TODO: set to dev mode while testing -->
-    <nav class="nav" v-if="isDev">
-      <router-link class="nav-item" to="/">
-        Riverflow
-      </router-link>
-      <router-link class="nav-item" to="/streamflow">
-        Streamflow
-      </router-link>
-    </nav>
-    <div class="header" v-once>
+  <header>
+    <div class="header is-flex" v-once>
       <h1 class="title">{{ title }}</h1>
       <p class="tagline">{{ tagline }}</p>
     </div>
-  </div>
+  </header>
 </template>
 
 <script>
@@ -24,37 +15,22 @@ export default {
       title: 'Riverflow',
       tagline: 'Texas Edition'
     }
-  },
-  computed: {
-    isDev: function () {
-      if (typeof (process.env.NODE_ENV) === 'string') {
-        return (process.env.NODE_ENV === 'development') ? 1 : 0;
-      } else {
-        return 0;
-      }
-    }
   }
 }
 </script>
 
-<style scoped lang="scss">
-@import '../assets/scss/variables.scss';
+<style scoped lang="sass">
+@import '../assets/scss/bulma-styles.sass'
 
-.header {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-}
+.header
+  align-items: center
+  justify-content: space-between
 
-:root .title, .tagline {
-  margin: 1em $default-padding;
-}
+.title, .tagline
+  margin: 1rem $default-padding
 
-.title {
-  font-size: 1.2em;
-}
+.tabs li:first-child
+  padding-left: 1rem
 
-.tagline {
-  font-size: 1em;
-}
+
 </style>

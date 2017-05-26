@@ -18,7 +18,7 @@ export default {
   props: {
     latestCfs: {
       type: String,
-      required: true
+      required: false
     }
   },
   watch: {
@@ -50,6 +50,6 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="sass">
 
 </style>

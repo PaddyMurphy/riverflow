@@ -38,6 +38,7 @@ export default {
   },
   methods: {
     buildFlickrTags: function () {
+      // TODO: rewrite this to accept tags
       // get the tags from the select option text and trim everything after ':'
       this.flickrTags = this.siteName.replace(/:.*/, '').trim();
       // combine the river name as one tag
@@ -161,19 +162,21 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-  @import '../../node_modules/photoswipe/dist/photoswipe.css';
-  @import '../../node_modules/photoswipe/dist/default-skin/default-skin.css';
+<style scoped lang="sass">
+@import '../../node_modules/photoswipe/dist/photoswipe.css'
+@import '../../node_modules/photoswipe/dist/default-skin/default-skin.css'
 
-  .gallery {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-  .gallery a {
-    // display: inline-block;
-    width: 150px;
-    height: 150px;
-    margin: 0 auto 0.5em;
-  }
+.gallery
+  display: flex
+  flex-wrap: wrap
+  justify-content: space-around
+
+.gallery a
+  width: 150px
+  height: 150px
+  margin: 0 auto 0.5em
+
+.gallery img
+  vertical-align: middle
+
 </style>
