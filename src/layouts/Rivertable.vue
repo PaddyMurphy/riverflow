@@ -1,31 +1,45 @@
+<!--
+Rivertable: display all desirable rivers and creeks
+- esdocs - add comments
+- Display: Name, cfs, date, whitewater class, location, color rows to indicate flow
+- Color rows: use default conditions UNLESS OVERRIDEN
+- Click row: expand below with river details
+-->
 <template>
-  <section class="section rivertable">
-    <div v-if="error" class="notification is-danger">
-      <button class="delete" @click="error = undefined"></button>
-      {{ error }}
-    </div>
-    <div class="columns is-flex tools">
-      <div class="column column-search is-three-quarters">
-        <div class="field level-item">
-          <label class="label">Search</label>
-          <p class="control">
-            <input name="query" v-model="searchQuery" class="input" type="text" placeholder="Filter the table">
-          </p>
+  <div class="rivertable">
+    <section class="section">
+      <div class="container">
+        <div v-if="error" class="notification is-danger">
+          <button class="delete" @click="error = undefined"></button>
+          {{ error }}
         </div>
-      </div>
+        <div class="columns is-flex tools">
 
-      <div class="column column-button is-one-quarter">
-        <button :class="{ 'is-loading' : loading }" class="button is-primary" @click="getUsgsData">refresh river data</button>
-      </div>
-    </div>
+          <div class="column column-search is-three-quarters">
+            <div class="field level-item">
+              <label class="label">Search</label>
+              <p class="control">
+                <input name="query" v-model="searchQuery" class="input" type="text" placeholder="Filter the table">
+                <a class="delete is-small" @click="searchQuery = ''"></a>
+              </p>
+            </div>
+          </div>
 
-    <grid-table
-      :data="riversFormatted"
-      :columns="columns"
-      :filter-key="searchQuery"
-      :graphType="graphType">
-    </grid-table>
-  </section> <!-- END rivertable -->
+          <div class="column column-button is-one-quarter">
+            <button :class="{ 'is-loading' : loading }" class="button is-primary" @click="getUsgsData">refresh river data</button>
+          </div>
+        </div>
+
+        <grid-table
+          :data="riversFormatted"
+          :columns="columns"
+          :filter-key="searchQuery"
+          :loading="loading"
+          :graphType="graphType">
+        </grid-table>
+      </div>
+    </section>
+  </div> <!-- END rivertable -->
 </template>
 
 <script>
@@ -66,9 +80,15 @@ export default {
   components: {
     'grid-table': GridTable
   },
+  watch: {
+    '$route' (to, from) {
+      // react to route changes...
+      console.log(to);
+    }
+  },
   mounted: function () {
     // set selected river and fetch if routed from url
-    if (this.$route.name === 'RivertableUrl') {}
+    // if (this.$route.name === 'RivertableUrl') {}
     // load the river data
     this.getUsgsData();
   },
@@ -230,7 +250,7 @@ export default {
   .field
     justify-content: flex-start
   label
-    margin: 0 0.5rem 0 0
+    margin: 0 0.5rem
 
 .columns
   flex-wrap: wrap
@@ -238,5 +258,9 @@ export default {
 .column-button
   justify-content: flex-end
 
+.delete
+  position: absolute
+  top: 0.6em
+  right: 0.6rem
 
 </style>

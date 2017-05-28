@@ -1,8 +1,10 @@
 <template>
-  <header>
-    <div class="header is-flex" v-once>
-      <h1 class="title">{{ title }}</h1>
-      <p class="tagline">{{ tagline }}</p>
+  <header class="hero is-bold is-primary">
+    <div class="container">
+      <div class="header is-flex" v-once>
+        <h1 class="title">{{ title }}</h1>
+        <p class="tagline">{{ tagline }}</p>
+      </div>
     </div>
   </header>
 </template>

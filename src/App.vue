@@ -1,13 +1,17 @@
 <template>
   <div id="app">
     <navbar />
-      <keep-alive>
-        <router-view></router-view>
-      </keep-alive>
+
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
+
+    <footer-main />
   </div>
 </template>
 
 <script>
+import FooterMain from '@/components/FooterMain'
 import Navbar from '@/components/Navbar'
 
 export default {
@@ -16,6 +20,7 @@ export default {
     return {}
   },
   components: {
+    'footer-main': FooterMain,
     'navbar': Navbar
   },
   mounted: function () {
