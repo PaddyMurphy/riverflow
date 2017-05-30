@@ -66,7 +66,10 @@
           <td colspan="5">
             <div class="row-details-wrapper columns">
               <div class="column column-condition is-one-quarter">
-                <p>{{ river.condition }}</p>
+                <div class="content">
+                  <p>{{ river.condition }}</p>
+                  <p class="small">NOTE: The rising / falling arrows compare the current value to the value 12 hours ago. The river may already be on the way down</p>
+                </div>
               </div>
               <div class="column column-graph is-three-quarters">
                 <graph
@@ -269,6 +272,8 @@ export default {
 .level-6
   background-color: lighten($green, 10%)
 
+.small
+  font-size: $size-7
 
 // svg arrows indicating rise/fall
 .arrow-up,

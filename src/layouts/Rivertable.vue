@@ -136,10 +136,12 @@ export default {
     displayUsgsData: function (response) {
       const vm = this;
       const today = new Date();
+      let arr;
       let river = {};
       let currentValue;
       let date;
       let geo;
+      let middleValue;
       let oldestValue;
       let rising;
       let risingFast;
@@ -149,10 +151,13 @@ export default {
 
       response.forEach(function (d, i) {
         // NOTE: some rivers do not support cfs (00060)
-        // the last item is the latest value
-        oldestValue = d.values[0].value[0].value;
+        arr = d.values[0].value;
+        // get the middle value from 12 hours ago
+        middleValue = arr[Math.round((arr.length - 1) / 2)].value;
+        // last item is the latest value from 24 hours ago
+        oldestValue = arr[0].value;
         // TODO: don't reverse... order makes a difference here
-        currentValue = d.values[0].value.reverse()[0];
+        currentValue = arr.reverse()[0];
         date = new Date(currentValue.dateTime);
         time = date.toLocaleTimeString();
         // only show date if not today
@@ -162,8 +167,8 @@ export default {
 
         geo = d.sourceInfo.geoLocation.geogLocation;
         site = d.sourceInfo.siteCode[0].value;
-        rising = (parseInt(currentValue.value, 10) > parseInt(oldestValue, 10));
-        risingFast = ((parseInt(currentValue.value, 10) - parseInt(oldestValue, 10)) > risingFastThreshold);
+        rising = (parseInt(currentValue.value, 10) > parseInt(middleValue, 10));
+        risingFast = ((parseInt(currentValue.value, 10) - parseInt(middleValue, 10)) > risingFastThreshold);
 
         river = {
           'name': d.sourceInfo.siteName,
