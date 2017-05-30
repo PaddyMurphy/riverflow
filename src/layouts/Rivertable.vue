@@ -142,6 +142,8 @@ export default {
       let geo;
       let oldestValue;
       let rising;
+      let risingFast;
+      let risingFastThreshold = 300; // NOTE: arbitrary value
       let site;
       let time;
 
@@ -153,7 +155,7 @@ export default {
         currentValue = d.values[0].value.reverse()[0];
         date = new Date(currentValue.dateTime);
         time = date.toLocaleTimeString();
-        // onl
+        // only show date if not today
         if (today.toDateString() === date.toDateString()) {
           date = '';
         }
@@ -161,6 +163,7 @@ export default {
         geo = d.sourceInfo.geoLocation.geogLocation;
         site = d.sourceInfo.siteCode[0].value;
         rising = (parseInt(currentValue.value, 10) > parseInt(oldestValue, 10));
+        risingFast = ((parseInt(currentValue.value, 10) - parseInt(oldestValue, 10)) > risingFastThreshold);
 
         river = {
           'name': d.sourceInfo.siteName,
@@ -172,7 +175,8 @@ export default {
           'oldCfs': oldestValue,
           'condition': vm.getConditions(currentValue.value).condition,
           'level': vm.getConditions(currentValue.value).level,
-          'rising': rising
+          'rising': rising,
+          'risingFast': risingFast
         }
 
         vm.mergeRiverInfo(river);

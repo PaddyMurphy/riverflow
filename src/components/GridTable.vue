@@ -1,67 +1,88 @@
 <template>
-  <table class="table" v-if="filteredData.length">
-    <thead>
-      <tr>
-        <th v-for="key in columns"
-          @click="sortBy(key)"
-          :class="{ active: sortKey == key }">
-          {{ key | capitalize }}
-          <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
-          </span>
-        </th>
-        <th>Class</th>
-        <th>Time</th>
-        <th>Map</th>
-      </tr>
-    </thead>
-    <tfoot>
-      <tr>
-        <th>River Name</th>
-        <th><abbr title="cubic feet per second">CFS</abbr></th>
-        <th>Class</th>
-        <th>Time</th>
-        <th>Map</th>
-      </tr>
-    </tfoot>
-    <tbody v-for="river in filteredData">
-      <tr :class="river.level"
-        :data-selected="river.site"
-        @click="selectRiver"
-      >
-        <th>{{ river.name }}</th>
-        <td>
-          {{ river.cfs }}
-          <span :class="river.rising ? 'arrow-up' : 'arrow-down'"></span>
-        </td>
-        <td class="wwclass">{{ river.class }}</td>
-        <td>
-          <span class="date">{{ river.date }}</span>
-          <span class="time">{{ river.time }}</span>
-        </td>
-        <td>
-          <a :href="river.location">Gauge</a>
-        </td>
-      </tr>
-      <tr class="row-details">
-        <td colspan="5">
-          <div class="row-details-wrapper columns">
-            <div class="column column-condition is-one-quarter">
-              <p>{{ river.condition }}</p>
+  <div class="gridtable">
+
+    <svg style="display: none;">
+      <symbol viewBox="0 0 27 30" version="1.1">
+        <g id="arrow-flow">
+            <polygon id="Combined-Shape" points="21.6 29.4545455 5.4 29.4545455 5.4 16.2 0 16.2 13.5 0 27 16.2 21.6 16.2"></polygon>
+        </g>
+      </symbol>
+    </svg>
+
+    <div v-show="loading" class="loading notification is-warning">Loading river information...</div>
+
+    <table class="table" v-show="filteredData.length">
+      <thead>
+        <tr>
+          <th v-for="key in columns"
+            @click="sortBy(key)"
+            :class="[{ active: sortKey == key}, key]">
+            {{ key | capitalize }}
+            <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+            </span>
+          </th>
+          <th>Class</th>
+          <th>Time</th>
+          <th>Map</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th>River Name</th>
+          <th><abbr title="cubic feet per second">CFS</abbr></th>
+          <th>Class</th>
+          <th>Time</th>
+          <th>Map</th>
+        </tr>
+      </tfoot>
+      <tbody v-for="river in filteredData">
+        <tr :class="river.level"
+          :data-selected="river.site"
+          @click="selectRiver"
+        >
+          <th>{{ river.name }}</th>
+          <td>
+            {{ river.cfs }}
+
+            <svg viewBox="0 0 27 30"
+              :class="[
+                river.rising ? 'arrow-up' : 'arrow-down',
+                river.risingFast ? 'is-rising-fast' : ''
+              ]"
+            >
+              <use xlink:href="#arrow-flow" />
+            </svg>
+          </td>
+          <td class="wwclass">{{ river.class }}</td>
+          <td>
+            <span class="date">{{ river.date }}</span>
+            <span class="time">{{ river.time }}</span>
+          </td>
+          <td>
+            <a :href="river.location">Gauge</a>
+          </td>
+        </tr>
+        <tr class="row-details">
+          <td colspan="5">
+            <div class="row-details-wrapper columns">
+              <div class="column column-condition is-one-quarter">
+                <p>{{ river.condition }}</p>
+              </div>
+              <div class="column column-graph is-three-quarters">
+                <graph
+                  :selected="selected"
+                  :startDate="startDate"
+                  :endDate="endDate"
+                  :graphType="graphType"
+                  v-show="selected"
+                />
+              </div>
             </div>
-            <div class="column column-graph is-three-quarters">
-              <graph
-                :selected="selected"
-                :startDate="startDate"
-                :endDate="endDate"
-                :graphType="graphType"
-                v-show="selected"
-              />
-            </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
@@ -73,6 +94,7 @@ export default {
     data: Array,
     columns: Array,
     filterKey: String,
+    loading: Boolean,
     graphType: String
   },
   data () {
@@ -187,6 +209,9 @@ export default {
 @import '../../node_modules/bulma/sass/utilities/initial-variables'
 // import custom variables
 @import '../assets/scss/bulma-styles.sass'
+.loading
+  text-align: center
+
 
 .tools
   margin-bottom: 1rem
@@ -244,25 +269,40 @@ export default {
 .level-6
   background-color: lighten($green, 10%)
 
-// arrows
+
+// svg arrows indicating rise/fall
+.arrow-up,
+.arrow-down
+  width: auto
+  height: 15px
+
 .arrow-up
-  width: 0
-  height: 0
-  display: inline-block;
-  border-left: 6px solid transparent
-  border-right: 6px solid transparent
-  border-bottom: 10px solid $green
+  fill: darken($green, 8%)
+  transform: translateY(2px)
 
 .arrow-down
-  width: 0
-  height: 0
-  display: inline-block;
-  border-left: 6px solid transparent
-  border-right: 6px solid transparent
-  border-top: 10px solid $red
-// sort arrows
+  fill: darken($red, 8%)
+  transform: scale(-1) translateY(-2px)
+
+.is-rising-fast
+  animation: pulse 1.3s linear infinite;
+
+@keyframes pulse
+  0%
+    transform: translateY(2px)
+  50%
+    transform: translateY(-4px)
+  100%
+    transform: translateY(2px)
+
+
+// table sorting sort arrows
 th.active .arrow
   opacity: 1
+
+.cfs
+  min-width: 5rem
+  text-transform: uppercase
 
 .arrow
   display: inline-block
