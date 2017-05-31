@@ -97,6 +97,9 @@ export default {
      * Fetches usgs instant data from rivers.json.
      * @return {number[]} response
      */
+
+    // NOTE: fails 00060: 08169845 Guad Gonzales
+    //       08449100 Dolan creek
     getUsgsData: function () {
       var vm = this;
 
@@ -120,12 +123,12 @@ export default {
         } else {
           vm.error = 'no river data available';
         }
-        // TODO: set the url
       })
       .catch(error => {
-        console.error(error);
+        console.log(error);
         vm.loading = false;
-        vm.error = error.message;
+        // TODO: enable for 3-400 errors only
+        // vm.error = error.message;
       });
     },
     /**

@@ -24,7 +24,6 @@
 	{ "text": "Guadalupe River : Sattler", "value": "08167800", "class": "II" },
 	{ "text": "Comal River : New Braunfels", "value": "08168500", "class": "II" },
 	{ "text": "Guadalupe River : FM 1117 nr Seguin", "value": "08169792", "class": "II" },
-	{ "text": "Guadalupe River : Gonzales", "value": "08169845", "class": "II" },
 	{ "text": "San Marcos River : San Marcos", "value": "08170500", "class": "II" },
 	{ "text": "San Marcos River : Luling", "value": "08172000", "class": "II" },
 	{ "text": "Blanco River : Wimberley", "value": "08171000", "class": "II-III" },
@@ -43,6 +42,5 @@
 	{ "text": "San Antonio River :", "value": "08188500", "class": "II" },
 	{ "text": "Pedernales River : Fredericksburg", "value": "08152900", "class": "II" },
 	{ "text": "Pedernales River : Johnson City", "value": "08153500", "class": "II" },
-	{ "text": "Dolan Creek above Devils River : Comstock", "value": "08449100", "class": "II" },
 	{ "text": "Walnut Creek : Austin", "value": "08158200", "class": "III" }
 ]}

@@ -67,6 +67,7 @@
             <div class="row-details-wrapper columns">
               <div class="column column-condition is-one-quarter">
                 <div class="content">
+                  <p class="sitecode">USGS site: {{ river.site }}</p>
                   <p>{{ river.condition }}</p>
                   <p class="small">NOTE: The rising / falling arrows compare the current value to the value 12 hours ago. The river may already be on the way down</p>
                 </div>
