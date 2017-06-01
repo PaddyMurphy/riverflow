@@ -13,6 +13,7 @@
 	{ "text": "Barton Creek : SH 71", "value": "08155200", "class": "II-III+" },
 	{ "text": "Colorado River : Austin", "value": "08158000", "class": "I-II" },
 	{ "text": "Colorado River : Bastrop", "value": "08159200", "class": "I-II" },
+	{ "text": "Onion Creek : Manchaca", "value": "08158827", "class": "II-III" },
 	{ "text": "Onion Creek : Hwy 183", "value": "08159000", "class": "II-III" },
 	{ "text": "Onion Creek : Driftwood", "value": "08158700", "class": "II-III" },
 	{ "text": "Llano River : Llano", "value": "08151500", "class": "II-III" },
@@ -22,8 +23,9 @@
 	{ "text": "San Saba River : San Saba", "value": "08146000", "class": "II" },
 	{ "text": "Guadalupe River : Spring Branch", "value": "08167500", "class": "II" },
 	{ "text": "Guadalupe River : Sattler", "value": "08167800", "class": "II" },
-	{ "text": "Comal River : New Braunfels", "value": "08168500", "class": "II" },
+	{ "text": "Guadalupe River : Comal New Braunfels", "value": "08168500", "class": "II" },
 	{ "text": "Guadalupe River : FM 1117 nr Seguin", "value": "08169792", "class": "II" },
+	{ "text": "Guadalupe River : Gonzales", "value": "08169845", "class": "II" },
 	{ "text": "San Marcos River : San Marcos", "value": "08170500", "class": "II" },
 	{ "text": "San Marcos River : Luling", "value": "08172000", "class": "II" },
 	{ "text": "Blanco River : Wimberley", "value": "08171000", "class": "II-III" },
@@ -42,5 +44,7 @@
 	{ "text": "San Antonio River :", "value": "08188500", "class": "II" },
 	{ "text": "Pedernales River : Fredericksburg", "value": "08152900", "class": "II" },
 	{ "text": "Pedernales River : Johnson City", "value": "08153500", "class": "II" },
-	{ "text": "Walnut Creek : Austin", "value": "08158200", "class": "III" }
+	{ "text": "Walnut Creek : Austin", "value": "08158200", "class": "III" },
+	{ "text": "Dolan creek", "value": "08449100", "class": "I" }
+
 ]}

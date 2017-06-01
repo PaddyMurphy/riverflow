@@ -98,8 +98,10 @@ export default {
      * @return {number[]} response
      */
 
-    // NOTE: fails 00060: 08169845 Guad Gonzales
-    //       08449100 Dolan creek
+    // NOTE somtimes fails 00060:
+    // 08169845 Guad Gonzales
+    // 08449100 Dolan creek
+    // disabling catch error display
     getUsgsData: function () {
       var vm = this;
 
@@ -111,7 +113,7 @@ export default {
           parameterCd: this.graphType,
           sites: this.sites,
           format: 'json',
-          period: 'P1D',
+          period: 'PT12H', // past 12 hours
           siteStatus: 'active'
         }
       })
@@ -127,7 +129,6 @@ export default {
       .catch(error => {
         console.log(error);
         vm.loading = false;
-        // TODO: enable for 3-400 errors only
         // vm.error = error.message;
       });
     },
@@ -144,23 +145,20 @@ export default {
       let currentValue;
       let date;
       let geo;
-      let middleValue;
       let oldestValue;
       let rising;
       let risingFast;
-      let risingFastThreshold = 300; // NOTE: arbitrary value
+      let risingFastThreshold = 200; // NOTE: arbitrary value
       let site;
       let time;
 
       response.forEach(function (d, i) {
         // NOTE: some rivers do not support cfs (00060)
         arr = d.values[0].value;
-        // get the middle value from 12 hours ago
-        middleValue = arr[Math.round((arr.length - 1) / 2)].value;
-        // last item is the latest value from 24 hours ago
+        // currentValue is the last item
+        currentValue = arr[arr.length - 1];
+        // oldestValue is the first item
         oldestValue = arr[0].value;
-        // TODO: don't reverse... order makes a difference here
-        currentValue = arr.reverse()[0];
         date = new Date(currentValue.dateTime);
         time = date.toLocaleTimeString();
         // only show date if not today
@@ -170,8 +168,8 @@ export default {
 
         geo = d.sourceInfo.geoLocation.geogLocation;
         site = d.sourceInfo.siteCode[0].value;
-        rising = (parseInt(currentValue.value, 10) > parseInt(middleValue, 10));
-        risingFast = ((parseInt(currentValue.value, 10) - parseInt(middleValue, 10)) > risingFastThreshold);
+        rising = (parseInt(currentValue.value, 10) > parseInt(oldestValue, 10));
+        risingFast = ((parseInt(currentValue.value, 10) - parseInt(oldestValue, 10)) > risingFastThreshold);
 
         river = {
           'name': d.sourceInfo.siteName,
