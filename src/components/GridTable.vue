@@ -4,7 +4,7 @@
     <svg style="display: none;">
       <symbol viewBox="0 0 27 30" version="1.1">
         <g id="arrow-flow">
-            <polygon id="Combined-Shape" points="21.6 29.4545455 5.4 29.4545455 5.4 16.2 0 16.2 13.5 0 27 16.2 21.6 16.2"></polygon>
+            <polygon points="21.6 29.4545455 5.4 29.4545455 5.4 16.2 0 16.2 13.5 0 27 16.2 21.6 16.2"></polygon>
         </g>
       </symbol>
     </svg>
@@ -21,18 +21,18 @@
             <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
             </span>
           </th>
-          <th>Class</th>
-          <th>Time</th>
-          <th>Map</th>
+          <th class="th-class">Class</th>
+          <th class="th-time">Time</th>
+          <th class="is-hidden-mobile">Map</th>
         </tr>
       </thead>
       <tfoot>
         <tr>
           <th>River Name</th>
           <th><abbr title="cubic feet per second">CFS</abbr></th>
-          <th>Class</th>
-          <th>Time</th>
-          <th>Map</th>
+          <th class="th-class">Class</th>
+          <th class="th-time">Time</th>
+          <th class="is-hidden-mobile">Map</th>
         </tr>
       </tfoot>
       <tbody v-for="river in filteredData">
@@ -58,7 +58,7 @@
             <span class="date">{{ river.date }}</span>
             <span class="time">{{ river.time }}</span>
           </td>
-          <td>
+          <td class="is-hidden-mobile">
             <a :href="river.location">Gauge</a>
           </td>
         </tr>
@@ -307,7 +307,7 @@ th.active .arrow
   opacity: 1
 
 .cfs
-  min-width: 5rem
+  min-width: 4.5rem
   text-transform: uppercase
 
 .arrow
@@ -327,5 +327,11 @@ th.active .arrow
   border-left: 4px solid transparent
   border-right: 4px solid transparent
   border-top: 4px solid $blue
+
+@media only screen and (max-width: 768px)
+  .th-class,
+  .th-time
+    font-size: 0.8rem;
+    vertical-align: bottom;
 
 </style>

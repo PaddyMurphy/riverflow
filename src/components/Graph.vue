@@ -107,7 +107,7 @@ export default {
   image-rendering: pixelated
   height: auto
   max-height: 500px
-  min-width: 400px
+  min-width: 300px
   width: 100%
 
 .graph-wrapper
@@ -120,4 +120,5 @@ export default {
 
 .graph-loading
   flex: 1
+
 </style>

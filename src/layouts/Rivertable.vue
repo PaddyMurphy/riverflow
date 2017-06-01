@@ -3,7 +3,11 @@ Rivertable: display all desirable rivers and creeks
 - esdocs - add comments
 - Display: Name, cfs, date, whitewater class, location, color rows to indicate flow
 - Color rows: use default conditions UNLESS OVERRIDEN
-- Click row: expand below with river details
+- Click row: expand below with river details: desc, graph, photos
+TODO:
+- add photos in details row
+- optimize for mobile
+- add overrides for default condtions
 -->
 <template>
   <div class="rivertable">
@@ -160,7 +164,7 @@ export default {
         // oldestValue is the first item
         oldestValue = arr[0].value;
         date = new Date(currentValue.dateTime);
-        time = date.toLocaleTimeString();
+        time = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false});
         // only show date if not today
         if (today.toDateString() === date.toDateString()) {
           date = '';
