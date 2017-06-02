@@ -213,9 +213,9 @@ export default {
 @import '../../node_modules/bulma/sass/utilities/initial-variables'
 // import custom variables
 @import '../assets/scss/bulma-styles.sass'
+
 .loading
   text-align: center
-
 
 .tools
   margin-bottom: 1rem
