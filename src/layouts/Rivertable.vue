@@ -151,9 +151,10 @@ export default {
       let geo;
       let oldestValue;
       let newestValue;
+      let percentChanged;
       let rising;
       let risingFast;
-      let risingFastThreshold = 200; // NOTE: arbitrary value
+      let risingFastThreshold = 100; // 100% change is a double in cfs
       let site;
       let time;
 
@@ -162,15 +163,17 @@ export default {
         arr = d.values[0].value;
         // return on error
         if (!arr[0]) return;
+
         // oldestValue is the first item
-        oldestValue = arr[0].value;
+        oldestValue = parseInt(arr[0].value, 10);
         // currentValue is the last item
         currentValue = arr[arr.length - 1];
-        newestValue = currentValue.value;
-
+        newestValue = parseInt(currentValue.value, 10);
         // get current date / time
         date = new Date(currentValue.dateTime);
         time = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false});
+
+        percentChanged = Math.round((newestValue / oldestValue) * 100);
 
         // only show date if not today
         if (today.toDateString() === date.toDateString()) {
@@ -179,8 +182,8 @@ export default {
 
         geo = d.sourceInfo.geoLocation.geogLocation;
         site = d.sourceInfo.siteCode[0].value;
-        rising = (parseInt(newestValue, 10) > parseInt(oldestValue, 10));
-        risingFast = ((parseInt(newestValue, 10) - parseInt(oldestValue, 10)) > risingFastThreshold);
+        rising = (newestValue > oldestValue);
+        risingFast = (percentChanged > risingFastThreshold);
 
         river = {
           'name': d.sourceInfo.siteName,
