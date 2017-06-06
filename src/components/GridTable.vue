@@ -23,7 +23,6 @@
           </th>
           <th class="th-class">Class</th>
           <th class="th-time">Time</th>
-          <th class="is-hidden-mobile">Map</th>
         </tr>
       </thead>
       <tfoot>
@@ -32,7 +31,6 @@
           <th><abbr title="cubic feet per second">CFS</abbr></th>
           <th class="th-class">Class</th>
           <th class="th-time">Time</th>
-          <th class="is-hidden-mobile">Map</th>
         </tr>
       </tfoot>
       <tbody v-for="river in filteredData">
@@ -59,16 +57,15 @@
             <span class="date" v-if="river.date">{{ river.date }}</span>
             <span class="time">{{ river.time }}</span>
           </td>
-          <td class="is-hidden-mobile">
-            <a :href="river.location">Gauge</a>
-          </td>
         </tr>
         <tr class="row-details">
           <td colspan="5">
             <div class="row-details-wrapper columns">
               <div class="column column-condition is-one-quarter">
                 <div class="content">
-                  <p class="sitecode">USGS site: {{ river.site }}</p>
+                  <p class="sitecode">
+                    <button class="button" :href="river.location">USGS site {{ river.site }} location</button>
+                  </p>
                   <p>{{ river.condition }}</p>
                   <p class="small">NOTE: The rising / falling arrows compare the current value to the value 12 hours ago. The river may already be on the way down</p>
                 </div>
@@ -276,6 +273,10 @@ export default {
 
 .small
   font-size: $size-7
+
+.sitecode button
+  height: auto
+  white-space: normal
 
 // svg arrows indicating rise/fall
 .arrow-up,

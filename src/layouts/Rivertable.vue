@@ -16,13 +16,19 @@ TODO:
           <button class="delete" @click="error = undefined"></button>
           {{ error }}
         </div>
+
+        <div class="notification content" v-if="showLegend">
+          <a class="delete is-small" @click="showLegend = false"></a>
+          <p>Riverflow provides the latest <abbr title="cubic feet per second">CFS</abbr> from the USGS gauges of floatable rivers and creeks. The color indicates optimal floating conditions with additional inforamtion and a 7 day graph in the details.</p>
+        </div>
+
         <div class="columns is-flex tools">
 
           <div class="column column-search">
             <div class="field level-item">
-              <label class="label">Search</label>
+              <label for="search" class="label">Search</label>
               <p class="control">
-                <input name="query" v-model="searchQuery" class="input" type="text" placeholder="Filter the table">
+                <input id="search" name="search" v-model="searchQuery" class="input" type="text" placeholder="Filter the table">
                 <a class="delete is-small" @click="searchQuery = ''"></a>
               </p>
             </div>
@@ -66,7 +72,8 @@ export default {
       loading: false,
       rivers: Rivers.data,
       riversFormatted: [],
-      searchQuery: ''
+      searchQuery: '',
+      showLegend: true
     }
   },
   computed: {
