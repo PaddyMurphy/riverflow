@@ -6,7 +6,6 @@ Rivertable: display all desirable rivers and creeks
 - Click row: expand below with river details: desc, graph, photos
 TODO:
 - add photos in details row
-- optimize for mobile
 - add overrides for default condtions
 -->
 <template>
@@ -19,18 +18,21 @@ TODO:
         </div>
         <div class="columns is-flex tools">
 
-          <div class="column column-search is-three-quarters">
+          <div class="column column-search">
             <div class="field level-item">
               <label class="label">Search</label>
-              <p class="control">
+              <p class="control is-fullwidth">
                 <input name="query" v-model="searchQuery" class="input" type="text" placeholder="Filter the table">
                 <a class="delete is-small" @click="searchQuery = ''"></a>
               </p>
             </div>
           </div>
 
-          <div class="column column-button is-one-quarter">
-            <button :class="{ 'is-loading' : loading }" class="button is-primary" @click="getUsgsData">refresh river data</button>
+          <div class="column column-button">
+            <button :class="{ 'is-loading' : loading }" class="button is-primary" @click="getUsgsData">
+              <span class="refresh-long is-hidden-mobile">refresh river table</span>
+              <span class="refresh-short is-hidden-tablet">&#8634;</span>
+            </button>
           </div>
         </div>
 
@@ -154,7 +156,7 @@ export default {
       let percentChanged;
       let rising;
       let risingFast;
-      let risingFastThreshold = 100; // 100% change is a double in cfs
+      let risingFastThreshold = 130; // percent change
       let site;
       let time;
 
@@ -182,7 +184,10 @@ export default {
 
         geo = d.sourceInfo.geoLocation.geogLocation;
         site = d.sourceInfo.siteCode[0].value;
-        rising = (newestValue > oldestValue);
+        rising = (newestValue >= oldestValue);
+        console.log(d.sourceInfo.siteName)
+        console.log(percentChanged)
+        console.log('old: ' + oldestValue + ' new: ' + newestValue)
         risingFast = (percentChanged > risingFastThreshold);
 
         river = {
@@ -269,18 +274,23 @@ export default {
 .tools
   margin-bottom: 1rem
 
+.columns
+  flex-wrap: wrap
+
 .column-search
+  flex: 1
   min-width: 200px
   .field
     justify-content: flex-start
   label
     margin: 0 0.5rem
 
-.columns
-  flex-wrap: wrap
-
 .column-button
+  flex: 0
   justify-content: flex-end
+
+.refresh-short
+  font-weight: bold
 
 .delete
   position: absolute

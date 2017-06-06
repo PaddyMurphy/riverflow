@@ -44,7 +44,8 @@
           <td>
             {{ river.cfs }}
 
-            <svg viewBox="0 0 27 30"
+            <svg
+              viewBox="0 0 27 30"
               :class="[
                 river.rising ? 'arrow-up' : 'arrow-down',
                 river.risingFast ? 'is-rising-fast' : ''
@@ -55,7 +56,7 @@
           </td>
           <td class="wwclass">{{ river.class }}</td>
           <td>
-            <span class="date">{{ river.date }}</span>
+            <span class="date" v-if="river.date">{{ river.date }}</span>
             <span class="time">{{ river.time }}</span>
           </td>
           <td class="is-hidden-mobile">
