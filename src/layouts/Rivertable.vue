@@ -21,7 +21,7 @@ TODO:
           <div class="column column-search">
             <div class="field level-item">
               <label class="label">Search</label>
-              <p class="control is-fullwidth">
+              <p class="control">
                 <input name="query" v-model="searchQuery" class="input" type="text" placeholder="Filter the table">
                 <a class="delete is-small" @click="searchQuery = ''"></a>
               </p>
@@ -185,9 +185,6 @@ export default {
         geo = d.sourceInfo.geoLocation.geogLocation;
         site = d.sourceInfo.siteCode[0].value;
         rising = (newestValue >= oldestValue);
-        console.log(d.sourceInfo.siteName)
-        console.log(percentChanged)
-        console.log('old: ' + oldestValue + ' new: ' + newestValue)
         risingFast = (percentChanged > risingFastThreshold);
 
         river = {
@@ -284,6 +281,8 @@ export default {
     justify-content: flex-start
   label
     margin: 0 0.5rem
+  .control
+    width: 100%
 
 .column-button
   flex: 0
