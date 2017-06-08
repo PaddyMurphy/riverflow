@@ -191,7 +191,7 @@ export default {
 
         geo = d.sourceInfo.geoLocation.geogLocation;
         site = d.sourceInfo.siteCode[0].value;
-        rising = (newestValue >= oldestValue);
+        rising = (newestValue > oldestValue);
         risingFast = (percentChanged > risingFastThreshold);
 
         river = {

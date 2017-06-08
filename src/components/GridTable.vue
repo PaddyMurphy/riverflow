@@ -64,7 +64,7 @@
               <div class="column column-condition is-one-quarter">
                 <div class="content">
                   <p class="sitecode">
-                    <button class="button" :href="river.location">USGS site {{ river.site }} location</button>
+                    <a class="button site-link" :href="river.location" target="blank">USGS site {{ river.site }} location</a>
                   </p>
                   <p>{{ river.condition }}</p>
                   <p class="small">NOTE: The rising / falling arrows compare the current value to the value 12 hours ago. The river may already be on the way down</p>
@@ -274,7 +274,7 @@ export default {
 .small
   font-size: $size-7
 
-.sitecode button
+.site-link
   height: auto
   white-space: normal
 
