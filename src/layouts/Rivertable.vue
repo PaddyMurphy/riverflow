@@ -302,5 +302,8 @@ export default {
   position: absolute
   top: 0.6em
   right: 0.6rem
+  &.is-small
+    min-height: 16px
+    min-width: 16px
 
 </style>
